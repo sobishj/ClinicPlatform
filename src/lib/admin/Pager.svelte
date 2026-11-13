@@ -6,7 +6,7 @@
 	}
 	let { page, hasMore }: Props = $props();
 	function href(p: number) {
-		const u = new URL(pageState.url);
+		const u = new URL(pageState.url.href);
 		u.searchParams.set('page', String(p));
 		return u.pathname + u.search;
 	}

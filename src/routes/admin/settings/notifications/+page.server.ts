@@ -9,7 +9,7 @@ const KEYS = ['notifications', 'email'] as const;
 
 export const load: PageServerLoad = async (event) => ({
 	title: 'Notifications & email',
-	target: TARGET,
+	target: TARGET as 'node' | 'cloudflare',
 	...loadGroups(event, [...KEYS])
 });
 

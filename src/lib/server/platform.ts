@@ -9,7 +9,7 @@ import { resendProvider } from './email/resend.js';
 import type { Settings } from '../settings/schema.js';
 import { MEDIA_PUBLIC_BASE_URL } from '$app/env/private';
 
-export const TARGET = target.TARGET;
+export const TARGET: 'node' | 'cloudflare' = target.TARGET;
 export const getDb = target.getDb;
 export const cacheGet = target.cacheGet;
 export const cachePut = target.cachePut;
