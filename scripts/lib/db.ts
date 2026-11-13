@@ -29,6 +29,7 @@ export function openDb(file: string) {
 export const TABLE_ORDER = [
 	'settings',
 	'media',
+	'media_chunks',
 	'locations',
 	'location_closures',
 	'users',

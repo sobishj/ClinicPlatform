@@ -108,6 +108,8 @@ async function withFreshNonce(hit: Response): Promise<Response> {
 	const old = csp ? /'nonce-([^']+)'/.exec(csp)?.[1] : undefined;
 	const headers = new Headers(hit.headers);
 	headers.set('x-cache', 'HIT');
+	// Browsers always revalidate pages; only the edge/memory cache keeps them.
+	headers.set('cache-control', 'public, max-age=0, must-revalidate');
 	// Body may change length (nonce swap) and is never re-compressed here.
 	headers.delete('content-length');
 	headers.delete('content-encoding');

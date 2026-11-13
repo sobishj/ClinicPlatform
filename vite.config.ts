@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 /**
  * DEPLOY_TARGET picks the adapter and the platform module (`#target`) at build time.
  *  - node (default): adapter-node, better-sqlite3 file database, local-disk/S3 storage, SMTP
- *  - cloudflare:     adapter-cloudflare, D1, R2
+ *  - cloudflare:     adapter-cloudflare, D1 (data + uploaded files; no R2 needed)
  * Feature code never imports a driver directly; it goes through #lib/server/platform.
  */
 const target = process.env.DEPLOY_TARGET === 'cloudflare' ? 'cloudflare' : 'node';

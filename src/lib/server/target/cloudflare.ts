@@ -1,6 +1,7 @@
 /**
  * Platform implementation for Cloudflare Workers (adapter-cloudflare).
- * Uses only Web APIs and bindings: D1 (env.DB), R2 (env.MEDIA), Cache API.
+ * Uses only Web APIs and bindings: D1 (env.DB) for data and uploaded files, Cache API.
+ * No R2 is needed: uploads are stored in D1 (see storage/d1.ts).
  *
  * SvelteKit 3's adapter no longer passes `platform` to requests; bindings and
  * waitUntil come from the `cloudflare:workers` module instead. `platform` is still
@@ -9,13 +10,13 @@
 import { env as workerEnv, waitUntil as workerWaitUntil } from 'cloudflare:workers';
 import { drizzle } from 'drizzle-orm/d1';
 import { schema, type DB } from '../db/index.js';
-import { type Storage, nullStorage } from '../storage/types.js';
-import { r2Storage } from '../storage/r2.js';
+import type { Storage } from '../storage/types.js';
+import { d1Storage } from '../storage/d1.js';
 import type { EmailProvider, ResolvedEmailConfig } from '../email/types.js';
 
 export const TARGET = 'cloudflare' as const;
 
-type Bindings = { DB?: App.Platform['env']['DB']; MEDIA?: R2Bucket };
+type Bindings = { DB?: App.Platform['env']['DB'] };
 const bindings = (platform?: App.Platform): Bindings => (platform?.env as Bindings | undefined) ?? (workerEnv as Bindings);
 
 const dbCache = new WeakMap<object, DB>();
@@ -32,8 +33,7 @@ export function getDb(platform?: App.Platform): DB {
 }
 
 export function getStorage(platform?: App.Platform): Storage {
-	const bucket = bindings(platform).MEDIA;
-	return bucket ? r2Storage(bucket) : nullStorage;
+	return d1Storage(getDb(platform));
 }
 
 export async function getSmtpProvider(_cfg: ResolvedEmailConfig): Promise<EmailProvider | null> {
@@ -61,7 +61,9 @@ export async function cachePut(platform: App.Platform | undefined, key: string, 
 	const cache = defaultCache();
 	if (!cache) return;
 	const copy = new Response(response.body, response);
-	copy.headers.set('cache-control', `public, max-age=${ttlSeconds}`);
+	// Edge-cache lifetime; keep immutable for media, otherwise a short TTL.
+	const immutable = /immutable/.test(response.headers.get('cache-control') ?? '');
+	copy.headers.set('cache-control', `public, max-age=${ttlSeconds}${immutable ? ', immutable' : ''}`);
 	copy.headers.delete('set-cookie');
 	waitUntil(platform, cache.put(new Request(CACHE_HOST + key), copy as never));
 }

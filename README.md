@@ -5,7 +5,7 @@ The official website for a clinic, managed from an admin panel: who the clinic i
 First client: **Orchid Dental Care**.
 
 - **Stack:** SvelteKit 3 (Svelte 5 runes), TypeScript strict, Tailwind CSS 4, Drizzle ORM (SQLite dialect), Zod
-- **Runs on:** Cloudflare Workers free tier (D1 + R2 + Turnstile) **or** any Linux server (Docker: Node + SQLite + local disk/S3 + Caddy)
+- **Runs on:** Cloudflare Workers free tier (Workers + D1 + Turnstile — no R2 or payment method needed) **or** any Linux server (Docker: Node + SQLite + local disk/S3 + Caddy)
 - **Same code for both:** `DEPLOY_TARGET=cloudflare|node` picks the adapter and platform module at build time
 
 All six build phases are complete — see [Build phases](#build-phases).
@@ -52,14 +52,14 @@ Seed profiles: `dental`, `eye`, `skin`, `general`, `physio`, `other` (add `--nam
 | `npm run dev` | Dev server, local SQLite + local disk storage |
 | `npm run build:node` / `npm start` | Build and run the Node server (`build/`) |
 | `npm run build:cf` | Build the Cloudflare Worker (`.svelte-kit/cloudflare`) |
-| `npm run preview:cf` | Build for Cloudflare and run it locally with `wrangler dev` (local D1/R2) |
+| `npm run preview:cf` | Build for Cloudflare and run it locally with `wrangler dev` (local D1) |
 | `npm run deploy:cf` | Build, apply D1 migrations, deploy to Cloudflare |
 | `npm run seed -- --profile=dental` | Load demo content (`--sql=seed.sql` writes SQL for D1 instead) |
 | `npm run create-admin -- --email=…` | Create/reset a super admin (`--role=clinic_admin\|branch_staff`, `--sql=admin.sql` for D1) |
 | `npm run db:generate` | New migration after editing `src/lib/server/db/schema.ts` |
 | `npm run db:migrate` | Apply migrations to the local SQLite file (the server also does this on start) |
 | `npm run db:migrate:d1` / `db:migrate:d1:local` | Apply migrations to remote / local D1 |
-| `npm run migrate:data -- from-cloudflare\|to-cloudflare` | Move data between D1 + R2 and SQLite + disk |
+| `npm run migrate:data -- from-cloudflare\|to-cloudflare` | Move data (and uploaded files) between D1 and SQLite + disk |
 | `npm run backup` | One backup now (`deploy/backup.sh once`) |
 | `npm run check` | Type-check (svelte-check) |
 | `npm run test:unit` | Unit tests (Vitest) |
@@ -87,14 +87,13 @@ On Cloudflare, plain values go in `wrangler.toml` `[vars]`; secrets with `npx wr
 
 ## Deploy to Cloudflare (free tier)
 
-Uses Workers (with static assets), D1 (SQLite), R2 (files) and Turnstile — all within free limits for a clinic site.
+Uses Workers (with static assets), D1 (SQLite) and Turnstile — all free, **no R2 and no payment method needed**. Uploaded images and PDFs are stored inside D1 (table `media_chunks`, split into 40 KB chunks) and served from `/media/…` with long-lived edge caching, so each file is read from D1 only occasionally. Images are resized to WebP in the browser before upload (typically 50–300 KB); the free D1 tier (5 GB) holds thousands of them.
 
 ### One-time setup
 
 ```bash
 npx wrangler login
 npx wrangler d1 create clinic-db              # copy the database_id into wrangler.toml
-npx wrangler r2 bucket create clinic-media
 npm run db:migrate:d1                          # create tables in D1
 
 # Content and first admin (or use /admin/setup after the first deploy)
@@ -164,15 +163,12 @@ Without Docker: `npm ci && npm run build:node`, then run `node build` under syst
 ## Moving between Cloudflare and a server
 
 ```bash
-# R2 S3-API credentials (Cloudflare dashboard → R2 → Manage API tokens)
-export R2_S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com R2_BUCKET=clinic-media
-export R2_ACCESS_KEY_ID=… R2_SECRET_ACCESS_KEY=…
-
-npm run migrate:data -- from-cloudflare --db=./data/clinic.db --uploads=./data/uploads   # D1 + R2 → server
-npm run migrate:data -- to-cloudflare   --db=./data/clinic.db --uploads=./data/uploads   # server → D1 + R2
+npm run migrate:data -- to-cloudflare   --db=./data/clinic.db --uploads=./data/uploads   # server → D1
+npm run migrate:data -- to-cloudflare   --content-only                                     # content, settings and uploads only
+npm run migrate:data -- from-cloudflare --db=./data/clinic.db --uploads=./data/uploads   # D1 → server
 ```
 
-The database moves with `wrangler d1 export/execute` (an existing local file is copied aside first); files move over R2's S3 API. `--skip-db` / `--skip-files` move one part; `--local` targets wrangler's local D1 (useful for a dry run). Media URLs (`/media/uploads/…`) are identical on both targets, so no content rewriting is needed. Inside Docker: `docker compose exec app npx tsx scripts/migrate-data.ts …`.
+Everything moves with `wrangler d1 export/execute` (run `npx wrangler login` once) — including uploaded files, which live in D1's `media_chunks` table on Cloudflare and are written back to disk on a server. `--content-only` copies the website (branches, doctors, services, pages, slides, settings and uploads) but **no user accounts, appointments, messages, logs, API keys or webhooks** — use it to publish a site prepared locally. `--skip-files` leaves uploads out; `--local` targets wrangler's local D1 (a dry run). Media URLs (`/media/uploads/…`) are identical on both targets. Inside Docker: `docker compose exec app npx tsx scripts/migrate-data.ts …`.
 
 ---
 
@@ -239,7 +235,7 @@ src/
     server/
       platform.ts             the ONLY way feature code reaches db/storage/email/cache/background work
       target/node.ts          better-sqlite3, local disk/S3, SMTP, in-memory page cache
-      target/cloudflare.ts    D1, R2, Cache API, waitUntil (via cloudflare:workers)
+      target/cloudflare.ts    D1 (data + uploads), Cache API, waitUntil (via cloudflare:workers)
       db/schema.ts            Drizzle schema (portable SQLite; text ids, UTC millisecond times)
       booking.ts, notifications.ts, queries.ts, auth.ts, crypto.ts, sanitize.ts …
       api/, integrations/     REST API helpers, webhooks, providers, channels
@@ -274,7 +270,7 @@ Key decisions:
 
 - `npm run test:unit` — 72 tests: permissions, PBKDF2/HMAC, settings, Google Maps parsing, sanitiser, time zones and open-now, availability + slot calculation + double booking, CSV, webhook signatures.
 - `npm run test:e2e` — 21 Playwright tests against a production build with its own database: admin adds and reorders hero slides; adds a location with a map (and a non-Google map is rejected); adds a doctor to two branches who then appears on both location pages; visitor requests appointments with several branches, with one branch (branch step skipped), pre-filled from a doctor, and with invalid input; axe WCAG 2.1 A/AA checks (no serious or critical issues) on 11 key pages; skip link.
-- Also verified during development: the Cloudflare build on the Workers runtime (`wrangler dev` with local D1/R2) including booking, login, CSRF, uploads and page cache; the Docker image (seeded with the eye profile, health check, backup script); a D1 ⇄ SQLite round trip with matching row counts per table.
+- Also verified during development: the Cloudflare build on the Workers runtime (`wrangler dev` with local D1) including booking, login, CSRF, uploads and page cache; the Docker image (seeded with the eye profile, health check, backup script); a D1 ⇄ SQLite round trip with matching row counts per table.
 - Lighthouse (mobile, local production build): accessibility 100, SEO 100 and best practices 96 on every page tested; performance 93–97 on location, doctor and booking pages. The homepage (the longest page) measured 70–96 across repeated runs on the development machine — FCP/LCP 1.7 s and CLS 0 were stable while Total Blocking Time varied with machine load. Re-measure on the deployed site, and keep homepage sections lean.
 
 ## Build phases

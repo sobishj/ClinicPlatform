@@ -9,7 +9,7 @@ export interface S3Config {
 	secretAccessKey: string;
 }
 
-/** Any S3-compatible bucket (AWS S3, R2 S3 API, MinIO, Backblaze B2, Wasabi…). Uses fetch only. */
+/** Any S3-compatible bucket (AWS S3, MinIO, Backblaze B2, Wasabi…) for the Node build. Uses fetch only. */
 export function s3Storage(cfg: S3Config): Storage {
 	const client = new AwsClient({
 		accessKeyId: cfg.accessKeyId,

@@ -1,6 +1,5 @@
 import type {
 	D1Database,
-	R2Bucket,
 	ExecutionContext,
 	CacheStorage
 } from '@cloudflare/workers-types/index';
@@ -12,7 +11,6 @@ declare global {
 	/** Replaced at build time with 'node' | 'cloudflare'. */
 	const __DEPLOY_TARGET__: 'node' | 'cloudflare';
 
-	type R2Bucket = import('@cloudflare/workers-types/index').R2Bucket;
 	type Cache = import('@cloudflare/workers-types/index').Cache;
 
 	namespace App {
@@ -28,7 +26,6 @@ declare global {
 		interface Platform {
 			env: {
 				DB: D1Database;
-				MEDIA?: R2Bucket;
 				[key: string]: unknown;
 			};
 			ctx: ExecutionContext;

@@ -10,6 +10,7 @@ import {
 	sqliteTable,
 	text,
 	integer,
+	blob,
 	real,
 	primaryKey,
 	index,
@@ -120,7 +121,7 @@ export const media = sqliteTable(
 	'media',
 	{
 		id: id(),
-		/** Storage key (R2 / disk / S3). */
+		/** Storage key (D1 chunks on Cloudflare; disk / S3 on a server). */
 		key: text('key').notNull().unique(),
 		/** Public URL, e.g. /media/2026/11/abc.webp or /demo/hero-1.svg for seeded files. */
 		url: text('url').notNull(),
@@ -134,6 +135,23 @@ export const media = sqliteTable(
 		createdAt: createdAt()
 	},
 	(t) => [index('media_created_idx').on(t.createdAt)]
+);
+
+/**
+ * Uploaded file contents on Cloudflare (no R2): each file is split into chunks of
+ * ≤ 40 KB so every row — and every SQL statement used to copy it — stays well under
+ * D1's limits (2 MB per row, 100 KB per statement). Not used by the Node build,
+ * which stores files on disk/S3.
+ */
+export const mediaChunks = sqliteTable(
+	'media_chunks',
+	{
+		key: text('key').notNull(),
+		idx: integer('idx').notNull(),
+		mime: text('mime').notNull(),
+		data: blob('data', { mode: 'buffer' }).notNull()
+	},
+	(t) => [primaryKey({ columns: [t.key, t.idx] })]
 );
 
 // ───────────────────────── locations ─────────────────────────

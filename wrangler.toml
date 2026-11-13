@@ -20,10 +20,8 @@ database_name = "clinic-db"
 database_id = "00000000-0000-0000-0000-000000000000"
 migrations_dir = "drizzle"
 
-# R2 bucket for uploaded images and PDFs. Create it with:  npx wrangler r2 bucket create clinic-media
-[[r2_buckets]]
-binding = "MEDIA"
-bucket_name = "clinic-media"
+# No R2 needed: uploaded images and PDFs are stored in D1 (table media_chunks)
+# and served from /media with edge caching.
 
 # Cron trigger for webhook retries. The worker forwards it to /api/internal/cron.
 # (Optional; deliveries are also retried opportunistically on admin requests.)

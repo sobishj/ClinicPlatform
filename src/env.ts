@@ -19,7 +19,7 @@ export const variables = defineEnvVars({
 	S3_SECRET_ACCESS_KEY: { schema: optional },
 	MEDIA_PUBLIC_BASE_URL: {
 		schema: optional,
-		description: 'Optional public URL for media (e.g. an R2 custom domain). Default: /media'
+		description: 'Optional public URL for media (e.g. an S3 bucket domain). Default: /media'
 	},
 	EMAIL_PROVIDER: { schema: optional, description: 'resend | smtp | none' },
 	EMAIL_FROM: { schema: optional },

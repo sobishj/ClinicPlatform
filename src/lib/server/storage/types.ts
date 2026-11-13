@@ -5,9 +5,9 @@ export interface StoredObject {
 	etag?: string;
 }
 
-/** File storage for uploads. Implementations: R2, local disk, S3-compatible. */
+/** File storage for uploads. Implementations: D1 chunks (Cloudflare), local disk, S3-compatible. */
 export interface Storage {
-	readonly driver: 'r2' | 'local' | 's3' | 'none';
+	readonly driver: 'd1' | 'local' | 's3' | 'none';
 	put(key: string, data: ArrayBuffer | Uint8Array, contentType: string): Promise<void>;
 	get(key: string): Promise<StoredObject | null>;
 	delete(key: string): Promise<void>;
