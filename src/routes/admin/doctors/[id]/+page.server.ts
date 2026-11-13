@@ -74,7 +74,7 @@ export const load: PageServerLoad = async (event) => {
 		};
 	}
 	const row = await db.select().from(doctors).where(eq(doctors.id, id)).get();
-	if (!row) error(404, { message: 'Not found' });
+	if (!row) error(404, 'Not found');
 	const [links, leaves, svc] = await Promise.all([
 		db.select().from(doctorLocations).where(eq(doctorLocations.doctorId, id)),
 		db.select().from(doctorLeaves).where(eq(doctorLeaves.doctorId, id)).orderBy(asc(doctorLeaves.startDate)),

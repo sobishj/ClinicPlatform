@@ -5,9 +5,9 @@ import type { RequestHandler } from './$types';
 /** Serves uploaded files from R2 / disk / S3. Keys are content-unique, so cache forever. */
 export const GET: RequestHandler = async ({ params, platform, request }) => {
 	const key = params.key;
-	if (!key || key.includes('..') || !key.startsWith('uploads/')) error(404, { message: 'Not found' });
+	if (!key || key.includes('..') || !key.startsWith('uploads/')) error(404, 'Not found');
 	const obj = await getStorage(platform).get(key);
-	if (!obj) error(404, { message: 'Not found' });
+	if (!obj) error(404, 'Not found');
 	if (obj.etag && request.headers.get('if-none-match') === obj.etag) {
 		return new Response(null, { status: 304 });
 	}

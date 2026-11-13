@@ -55,7 +55,7 @@ export default defineConfig({
 		alias: [{ find: /^#target$/, replacement: targetModule }]
 	},
 	ssr: {
-		external: target === 'node' ? ['better-sqlite3', 'nodemailer'] : []
+		external: target === 'node' ? ['better-sqlite3', 'nodemailer'] : ['cloudflare:workers']
 	},
 	define: {
 		__DEPLOY_TARGET__: JSON.stringify(target)

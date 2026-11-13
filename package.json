@@ -10,7 +10,6 @@
 	},
 	"scripts": {
 		"dev": "vite dev",
-		"dev:cf": "cross-env DEPLOY_TARGET=cloudflare vite dev",
 		"build": "vite build",
 		"build:node": "cross-env DEPLOY_TARGET=node vite build",
 		"build:cf": "cross-env DEPLOY_TARGET=cloudflare vite build",
@@ -30,9 +29,12 @@
 		"create-admin": "tsx scripts/create-admin.ts",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run && npm run test:e2e",
-		"test:e2e": "playwright test"
+		"test:e2e": "playwright test",
+		"migrate:data": "tsx scripts/migrate-data.ts",
+		"backup": "sh deploy/backup.sh once"
 	},
 	"devDependencies": {
+		"@axe-core/playwright": "^4.14.0",
 		"@cloudflare/workers-types": "^5.20261113.1",
 		"@playwright/test": "^1.60.0",
 		"@sveltejs/adapter-cloudflare": "^8.0.2",
@@ -47,24 +49,25 @@
 		"@types/nodemailer": "^8.0.2",
 		"cross-env": "^10.1.0",
 		"drizzle-kit": "^0.31.11",
+		"lighthouse": "^13.6.0",
 		"prettier": "^3.8.3",
 		"prettier-plugin-svelte": "^4.1.0",
 		"prettier-plugin-tailwindcss": "^0.8.0",
 		"svelte": "^5.57.2",
 		"svelte-check": "^4.6.0",
 		"tailwindcss": "^4.3.0",
-		"tsx": "^4.23.15",
 		"typescript": "^6.0.3",
 		"vite": "^8.3.0",
 		"vitest": "^4.1.8",
 		"wrangler": "^4.161.0"
 	},
 	"dependencies": {
-		"@lucide/svelte": "^1.72.0",
 		"aws4fetch": "^1.0.20",
 		"better-sqlite3": "^13.1.1",
 		"drizzle-orm": "^0.45.4",
+		"lucide": "^1.72.0",
 		"nodemailer": "^10.5.0",
+		"tsx": "^4.23.15",
 		"xss": "^1.0.17",
 		"zod": "^4.6.7"
 	},

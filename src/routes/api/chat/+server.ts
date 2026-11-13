@@ -15,11 +15,11 @@ const body = z.object({
  */
 export const POST: RequestHandler = async ({ request, locals, url, getClientAddress }) => {
 	const s = locals.settings;
-	if (!s.modules.chatbot || s.chatbot.provider !== 'endpoint' || !s.chatbot.endpointUrl) error(404, { message: 'Chat is not enabled' });
+	if (!s.modules.chatbot || s.chatbot.provider !== 'endpoint' || !s.chatbot.endpointUrl) error(404, 'Chat is not enabled');
 	const limit = await rateLimit(locals.db, `chat:${clientIp(request, getClientAddress)}`, 40, 600);
 	if (!limit.allowed) return json({ reply: 'You have sent a lot of messages. Please call us if you need help quickly.', links: [] }, { status: 429 });
 	const parsed = body.safeParse(await request.json().catch(() => ({})));
-	if (!parsed.success) error(400, { message: 'Invalid message' });
+	if (!parsed.success) error(400, 'Invalid message');
 
 	try {
 		const res = await fetch(s.chatbot.endpointUrl, {

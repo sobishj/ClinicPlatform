@@ -6,6 +6,6 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ locals, params }) => {
 	requireModule(locals.settings, 'locations');
 	const result = await getLocation(locals.db, params.slug);
-	if (!result) error(404, { message: 'Page not found' });
+	if (!result) error(404, 'Page not found');
 	return result;
 };

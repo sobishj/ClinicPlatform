@@ -11,7 +11,7 @@ import { COLLECTIONS, collectionSchema, isCollectionKey, type CollectionDef } fr
 import type { Actions, PageServerLoad } from './$types';
 
 function getDef(key: string): CollectionDef {
-	if (!isCollectionKey(key)) error(404, { message: 'Unknown content type' });
+	if (!isCollectionKey(key)) error(404, 'Unknown content type');
 	return COLLECTIONS[key];
 }
 

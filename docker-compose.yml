@@ -1,0 +1,70 @@
+# Dedicated server: app + Caddy (automatic HTTPS) + daily backups.
+#
+#   cp .env.example .env        # set DOMAIN, ORIGIN and any email/Turnstile keys
+#   docker compose up -d --build
+#   docker compose exec app npx tsx scripts/create-admin.ts --email=you@clinic.com
+#   (or open https://DOMAIN/admin/setup)
+#
+# Data lives in the `clinic-data` volume (SQLite + uploads); backups in ./backups.
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      ORIGIN: https://${DOMAIN:?Set DOMAIN in .env}
+      # Real client IPs from Caddy (used for rate limiting)
+      ADDRESS_HEADER: X-Forwarded-For
+      XFF_DEPTH: '1'
+      DATABASE_PATH: /data/clinic.db
+      UPLOAD_DIR: /data/uploads
+    volumes:
+      - clinic-data:/data
+    expose:
+      - '3000'
+
+  caddy:
+    image: caddy:2.8
+    restart: unless-stopped
+    depends_on: [app]
+    environment:
+      DOMAIN: ${DOMAIN}
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+  backup:
+    image: alpine:3.20
+    restart: unless-stopped
+    depends_on: [app]
+    environment:
+      KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+      BACKUP_HOUR: ${BACKUP_HOUR:-2}
+      TZ: ${TZ:-Asia/Kolkata}
+    volumes:
+      - clinic-data:/data:ro
+      - ./backups:/backups
+      - ./deploy/backup.sh:/backup.sh:ro
+    entrypoint: ['/bin/sh', '/backup.sh', 'loop']
+
+  # Optional: hit the housekeeping endpoint every 10 minutes (webhook retries, cleanup).
+  cron:
+    image: alpine:3.20
+    restart: unless-stopped
+    depends_on: [app]
+    environment:
+      CRON_SECRET: ${CRON_SECRET:-}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - 'apk add --no-cache curl >/dev/null; while true; do [ -n "$$CRON_SECRET" ] && curl -fsS -X POST -H "Authorization: Bearer $$CRON_SECRET" http://app:3000/api/internal/cron >/dev/null; sleep 600; done'
+
+volumes:
+  clinic-data:
+  caddy-data:
+  caddy-config:

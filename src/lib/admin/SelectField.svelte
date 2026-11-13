@@ -29,7 +29,7 @@
 
 <Field {label} {hint} {error} {required} class={klass}>
 	{#snippet children({ id, invalid, describedby })}
-		<select {id} bind:value {required} aria-invalid={invalid} aria-describedby={describedby} class="input" {onchange}>
+		<select {id} bind:value={() => value ?? '', (v) => (value = v)} {required} aria-invalid={invalid} aria-describedby={describedby} class="input" {onchange}>
 			{#if placeholder !== undefined}<option value="">{placeholder}</option>{/if}
 			{#each norm as o (o.value)}
 				<option value={o.value}>{o.label}</option>

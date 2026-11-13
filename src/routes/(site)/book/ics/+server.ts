@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 	const ref = url.searchParams.get('ref') ?? '';
 	const row = await locals.db.select({ id: appointments.id }).from(appointments).where(eq(appointments.reference, ref)).get();
 	const d = row ? await appointmentDetails(locals.db, row.id) : null;
-	if (!d?.a.slotStart || !d.a.slotEnd) error(404, { message: 'Not found' });
+	if (!d?.a.slotStart || !d.a.slotEnd) error(404, 'Not found');
 	const s = locals.settings;
 	const ics = [
 		'BEGIN:VCALENDAR',

@@ -73,7 +73,7 @@ export const load: PageServerLoad = async (event) => {
 		};
 	}
 	const row = await db.select().from(services).where(eq(services.id, id)).get();
-	if (!row) error(404, { message: 'Not found' });
+	if (!row) error(404, 'Not found');
 	const [sl, sd] = await Promise.all([
 		db.select({ id: serviceLocations.locationId }).from(serviceLocations).where(eq(serviceLocations.serviceId, id)),
 		db.select({ id: serviceDoctors.doctorId }).from(serviceDoctors).where(eq(serviceDoctors.serviceId, id))

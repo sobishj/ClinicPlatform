@@ -9,7 +9,7 @@ import type { Actions, PageServerLoad } from './$types';
 export const load: PageServerLoad = async (event) => {
 	requirePermission(event, 'integrations:manage');
 	const hook = await event.locals.db.select({ id: webhooks.id, name: webhooks.name, url: webhooks.url }).from(webhooks).where(eq(webhooks.id, event.params.id)).get();
-	if (!hook) error(404, { message: 'Webhook not found' });
+	if (!hook) error(404, 'Webhook not found');
 	const deliveries = await event.locals.db.select().from(webhookDeliveries).where(eq(webhookDeliveries.webhookId, hook.id)).orderBy(desc(webhookDeliveries.createdAt)).limit(100);
 	return { title: `Webhook log · ${hook.name}`, hook, deliveries };
 };

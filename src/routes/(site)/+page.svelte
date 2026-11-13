@@ -58,7 +58,7 @@
 	<SectionHeading eyebrow={s.eyebrow} heading={s.heading} intro={s.intro} {align} id="h-{s.id}" />
 {/snippet}
 
-{#each data.sections as s (s.id)}
+{#each data.sections as s, i (s.id)}
 	{#if s.id === 'hero'}
 		<HeroSlideshow
 			slides={data.slides}
@@ -91,7 +91,7 @@
 			</div>
 		</section>
 	{:else if s.id === 'services' && data.serviceGroups.length}
-		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''}" aria-labelledby="h-services">
+		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''} {i > 2 ? 'cv-auto' : ''}" aria-labelledby="h-services">
 			<div class="container-page">
 				<div class="flex flex-wrap items-end justify-between gap-4">
 					{@render heading(s)}
@@ -110,7 +110,7 @@
 			</div>
 		</section>
 	{:else if s.id === 'process' && data.process.length}
-		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''}" aria-labelledby="h-process">
+		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''} {i > 2 ? 'cv-auto' : ''}" aria-labelledby="h-process">
 			<div class="container-page grid items-center gap-12 lg:grid-cols-2">
 				<div>
 					{@render heading(s)}
@@ -134,7 +134,7 @@
 			</div>
 		</section>
 	{:else if s.id === 'doctors' && data.doctors.length}
-		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''}" aria-labelledby="h-doctors">
+		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''} {i > 2 ? 'cv-auto' : ''}" aria-labelledby="h-doctors">
 			<div class="container-page">
 				<div class="flex flex-wrap items-end justify-between gap-4">
 					{@render heading(s)}
@@ -146,7 +146,7 @@
 			</div>
 		</section>
 	{:else if s.id === 'locations' && data.locations.length}
-		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''}" aria-labelledby="h-locations">
+		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''} {i > 2 ? 'cv-auto' : ''}" aria-labelledby="h-locations">
 			<div class="container-page">
 				{@render heading(s)}
 				<ul class="mb-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -156,7 +156,7 @@
 			</div>
 		</section>
 	{:else if s.id === 'certifications' && data.certifications.length}
-		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''}" aria-labelledby="h-certifications">
+		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''} {i > 2 ? 'cv-auto' : ''}" aria-labelledby="h-certifications">
 			<div class="container-page">
 				{@render heading(s, 'center')}
 				<ul class="flex flex-wrap items-stretch justify-center gap-4">
@@ -173,7 +173,7 @@
 		</section>
 	{:else if (s.id === 'technology' && data.technology.length) || (s.id === 'insurance' && data.insurance.length)}
 		{@const items = s.id === 'technology' ? data.technology : data.insurance}
-		<section id={s.id} class="section {tinted.has(s.id) ? 'bg-surface-2' : ''}" aria-labelledby="h-{s.id}">
+		<section id={s.id} class="section {tinted.has(s.id) ? 'bg-surface-2' : ''} {i > 2 ? 'cv-auto' : ''}" aria-labelledby="h-{s.id}">
 			<div class="container-page">
 				{@render heading(s)}
 				<ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -187,7 +187,7 @@
 			</div>
 		</section>
 	{:else if s.id === 'amenities' && data.amenities.length}
-		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''}" aria-labelledby="h-amenities">
+		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''} {i > 2 ? 'cv-auto' : ''}" aria-labelledby="h-amenities">
 			<div class="container-page">
 				{@render heading(s, 'center')}
 				<ul class="mx-auto flex max-w-4xl flex-wrap justify-center gap-3">
@@ -198,7 +198,7 @@
 			</div>
 		</section>
 	{:else if s.id === 'testimonials' && data.testimonials.length}
-		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''}" aria-labelledby="h-testimonials">
+		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''} {i > 2 ? 'cv-auto' : ''}" aria-labelledby="h-testimonials">
 			<div class="container-page">
 				<div class="flex flex-wrap items-end justify-between gap-4">
 					{@render heading(s)}
@@ -219,7 +219,7 @@
 			</div>
 		</section>
 	{:else if s.id === 'membership' && data.membership.length}
-		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''}" aria-labelledby="h-membership">
+		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''} {i > 2 ? 'cv-auto' : ''}" aria-labelledby="h-membership">
 			<div class="container-page">
 				{@render heading(s, 'center')}
 				<ul class="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
@@ -238,7 +238,7 @@
 			</div>
 		</section>
 	{:else if s.id === 'faq' && data.faqs.length}
-		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''}" aria-labelledby="h-faq">
+		<section class="section {tinted.has(s.id) ? 'bg-surface-2' : ''} {i > 2 ? 'cv-auto' : ''}" aria-labelledby="h-faq">
 			<div class="container-page grid gap-10 lg:grid-cols-[1fr_1.6fr]">
 				<div>
 					{@render heading(s)}

@@ -121,7 +121,8 @@
 			// Start at the first incomplete step.
 			if (prev.name) return 'details';
 			if (!locationId && data.ctx.locations.length > 1) return 'location';
-			return data.preset.locationId && !presetDoctor && data.site.modules.doctors && data.ctx.doctors.length ? 'doctor' : 'when';
+			// Branch known (pre-filled or only one): offer the optional doctor step unless a doctor was pre-selected.
+			return !presetDoctor && data.site.modules.doctors && data.ctx.doctors.length ? 'doctor' : 'when';
 		})()
 	);
 	const stepIndex = $derived(Math.max(0, steps.indexOf(current)));

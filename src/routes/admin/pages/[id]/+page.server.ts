@@ -40,7 +40,7 @@ export const load: PageServerLoad = async (event) => {
 		};
 	}
 	const row = await event.locals.db.select().from(pages).where(eq(pages.id, id)).get();
-	if (!row) error(404, { message: 'Not found' });
+	if (!row) error(404, 'Not found');
 	return {
 		title: row.title,
 		isNew: false,

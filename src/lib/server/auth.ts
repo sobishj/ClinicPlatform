@@ -106,11 +106,11 @@ export function requirePermission(
 	permission: Permission
 ): SessionUser {
 	const user = requireUser(event);
-	if (!can(user, permission)) error(403, { message: 'You do not have permission to do that.' });
+	if (!can(user, permission)) error(403, 'You do not have permission to do that.');
 	return user;
 }
 
 export function requireLocationAccess(user: SessionUser, locationId: string | null | undefined) {
 	if (!canAccessLocation(user, locationId))
-		error(403, { message: 'You do not have access to this location.' });
+		error(403, 'You do not have access to this location.');
 }

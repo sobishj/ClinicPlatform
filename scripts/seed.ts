@@ -57,7 +57,7 @@ const { sqlite, db } = openDb(dbFile);
 
 // Wipe content (children first). Users stay, but their branch assignments are cleared.
 sqlite.pragma('foreign_keys = OFF');
-for (const t of ['user_locations', ...[...CONTENT_TABLES].reverse()]) sqlite.prepare(`DELETE FROM "${t}"`).run();
+for (const t of ['user_locations', 'rate_limits', ...[...CONTENT_TABLES].reverse()]) sqlite.prepare(`DELETE FROM "${t}"`).run();
 sqlite.pragma('foreign_keys = ON');
 
 const img = (url: string, alt: string, width = 1200, height = 800): ImageRef => ({ url, alt, width, height });

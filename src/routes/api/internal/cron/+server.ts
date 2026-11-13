@@ -12,7 +12,7 @@ import type { RequestHandler } from './$types';
  */
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const token = request.headers.get('authorization')?.replace(/^Bearer /, '') ?? '';
-	if (!CRON_SECRET || !safeEqual(token, CRON_SECRET)) error(401, { message: 'Unauthorized' });
+	if (!CRON_SECRET || !safeEqual(token, CRON_SECRET)) error(401, 'Unauthorized');
 	const retried = await processDueDeliveries(locals.db, 50);
 	await pruneDeliveries(locals.db);
 	await locals.db.delete(sessions).where(lt(sessions.expiresAt, Date.now()));

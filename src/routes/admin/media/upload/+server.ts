@@ -9,7 +9,7 @@ export const POST: RequestHandler = async (event) => {
 	requirePermission(event, 'media:write');
 	const form = await event.request.formData();
 	const file = form.get('file');
-	if (!(file instanceof File)) error(400, { message: 'No file received.' });
+	if (!(file instanceof File)) error(400, 'No file received.');
 	try {
 		const row = await storeUpload(event.locals.db, getStorage(event.platform), file, {
 			alt: String(form.get('alt') ?? ''),
@@ -20,7 +20,7 @@ export const POST: RequestHandler = async (event) => {
 		await audit(event, 'create', 'media', row.id, row.filename ?? row.key);
 		return json(row, { status: 201 });
 	} catch (err) {
-		if (err instanceof UploadError) error(400, { message: err.message });
+		if (err instanceof UploadError) error(400, err.message);
 		throw err;
 	}
 };

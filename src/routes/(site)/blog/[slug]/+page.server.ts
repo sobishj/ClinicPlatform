@@ -6,6 +6,6 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ locals, params }) => {
 	requireModule(locals.settings, 'blog');
 	const post = await getPage(locals.db, 'post', params.slug);
-	if (!post || (post.publishedAt && post.publishedAt > Date.now())) error(404, { message: 'Page not found' });
+	if (!post || (post.publishedAt && post.publishedAt > Date.now())) error(404, 'Page not found');
 	return { post };
 };

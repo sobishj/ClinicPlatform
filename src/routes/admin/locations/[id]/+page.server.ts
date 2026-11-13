@@ -114,7 +114,7 @@ export const load: PageServerLoad = async (event) => {
 		};
 	}
 	const row = await db.select().from(locations).where(eq(locations.id, id)).get();
-	if (!row) error(404, { message: 'Location not found' });
+	if (!row) error(404, 'Location not found');
 	const [closures, svc] = await Promise.all([
 		db.select().from(locationClosures).where(eq(locationClosures.locationId, id)).orderBy(asc(locationClosures.startDate)),
 		db.select({ serviceId: serviceLocations.serviceId }).from(serviceLocations).where(eq(serviceLocations.locationId, id))

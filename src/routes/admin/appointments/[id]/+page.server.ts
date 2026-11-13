@@ -16,7 +16,7 @@ import type { Actions, PageServerLoad, RequestEvent } from './$types';
 async function loadOwned(event: RequestEvent | Parameters<PageServerLoad>[0], permission: 'appointments:read' | 'appointments:write') {
 	const user = requirePermission(event, permission);
 	const d = await appointmentDetails(event.locals.db, event.params.id);
-	if (!d) error(404, { message: 'Appointment not found' });
+	if (!d) error(404, 'Appointment not found');
 	requireLocationAccess(user, d.a.locationId);
 	return { user, d };
 }
