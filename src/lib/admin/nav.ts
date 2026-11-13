@@ -18,7 +18,8 @@ export const ADMIN_NAV: NavGroup[] = [
 		label: '',
 		items: [
 			{ href: '/admin', label: 'Dashboard', icon: 'dashboard', permission: 'content:read' },
-			{ href: '/admin/appointments', label: 'Appointments', icon: 'calendar-check', permission: 'appointments:read' }
+			{ href: '/admin/appointments', label: 'Appointments', icon: 'calendar-check', permission: 'appointments:read' },
+			{ href: '/admin/messages', label: 'Messages', icon: 'message-circle', permission: 'appointments:read' }
 		]
 	},
 	{

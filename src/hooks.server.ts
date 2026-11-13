@@ -12,7 +12,7 @@ const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/setup', '/admin/forgot', '/a
 function isCacheable(event: Parameters<Handle>[0]['event']): boolean {
 	if (event.request.method !== 'GET') return false;
 	const p = event.url.pathname;
-	if (p.startsWith('/admin') || p.startsWith('/api/') || p.startsWith('/media/')) return false;
+	if (p.startsWith('/admin') || p.startsWith('/api/') || p.startsWith('/media/') || p.startsWith('/book/')) return false;
 	if (event.cookies.get(SESSION_COOKIE)) return false;
 	// Booking confirmation pages and anything with a form result must not be cached.
 	if (event.url.searchParams.has('ref') || event.url.search.includes('/')) return false;
@@ -72,6 +72,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		cacheable &&
 		response.status === 200 &&
 		!response.headers.has('set-cookie') &&
+		!/no-store|private/.test(response.headers.get('cache-control') ?? '') &&
 		/text\/html|application\/json/.test(response.headers.get('content-type') ?? '')
 	) {
 		response.headers.set('cache-control', 'public, max-age=0, must-revalidate');
