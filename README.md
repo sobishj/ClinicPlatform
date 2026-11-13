@@ -117,7 +117,7 @@ To test the Worker build locally first: `npm run db:migrate:d1:local`, run the t
 
 Pick one:
 
-- **GitHub Actions** (included): `.github/workflows/deploy-cloudflare.yml` builds, applies D1 migrations and deploys on every push to `main`. Add repository secrets `CLOUDFLARE_API_TOKEN` (template "Edit Cloudflare Workers", plus D1 edit permission) and `CLOUDFLARE_ACCOUNT_ID`. Set the repository variable `DEPLOY_TO_CLOUDFLARE=false` to disable it.
+- **GitHub Actions** (included): `.github/workflows/deploy-cloudflare.yml` builds, applies D1 migrations and deploys on pushes to `main`. Add repository secrets `CLOUDFLARE_API_TOKEN` (template "Edit Cloudflare Workers", plus D1 edit permission) and `CLOUDFLARE_ACCOUNT_ID`. Deploys are opt-in: set the repository variable `DEPLOY_TO_CLOUDFLARE=true` (Settings → Secrets and variables → Actions → Variables) once the secrets are added and `wrangler.toml` has your real D1 `database_id`.
 - **Cloudflare Workers Builds**: Dashboard → Workers & Pages → your worker → Settings → Build → connect the GitHub repo. Build command `npm run build:cf`, deploy command `npx wrangler d1 migrations apply clinic-db --remote && npx wrangler deploy`.
 
 `.github/workflows/ci.yml` runs type-checks, unit tests, both builds and the Playwright suite on every pull request.

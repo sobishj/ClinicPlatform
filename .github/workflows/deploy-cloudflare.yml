@@ -15,7 +15,8 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ vars.DEPLOY_TO_CLOUDFLARE != 'false' }}
+    # Opt-in: set the repository variable DEPLOY_TO_CLOUDFLARE=true once secrets and wrangler.toml are ready.
+    if: ${{ vars.DEPLOY_TO_CLOUDFLARE == 'true' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
