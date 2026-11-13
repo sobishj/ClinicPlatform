@@ -98,6 +98,19 @@ async function bookedStarts(db: DB, doctorId: string, ymd: string) {
 
 /** Live slots for a date. With no doctor chosen, merges slots across all bookable doctors. */
 export async function getSlots(db: DB, s: Settings, opts: { locationId: string; doctorId?: string | null; date: string; serviceId?: string | null }) {
+	// An external system may own availability (Admin → Integrations).
+	if (s.integrations.useProviderAvailability) {
+		const provider = await getIntegrationProvider(s);
+		const ext = await provider.fetchAvailability?.({ locationId: opts.locationId, doctorId: opts.doctorId, date: opts.date });
+		if (ext) {
+			const minStart = Date.now() + s.booking.minNoticeHours * 3600_000;
+			return ext
+				.map((x) => ({ start: Date.parse(x.start), end: Date.parse(x.end), doctorId: x.doctorId }))
+				.filter((x) => Number.isFinite(x.start) && Number.isFinite(x.end) && x.start >= minStart && (!opts.doctorId || !x.doctorId || x.doctorId === opts.doctorId))
+				.map((x) => ({ start: x.start, end: x.end, time: zonedParts(x.start, s.clinic.timeZone).hhmm, doctorIds: x.doctorId ? [x.doctorId] : opts.doctorId ? [opts.doctorId] : [] }))
+				.sort((a, b) => a.start - b.start);
+		}
+	}
 	const duration = opts.serviceId ? (await db.select({ d: services.durationMinutes }).from(services).where(eq(services.id, opts.serviceId)).get())?.d : null;
 	const doctorIds = opts.doctorId
 		? [opts.doctorId]

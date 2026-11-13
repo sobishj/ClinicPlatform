@@ -32,4 +32,4 @@
 <MobileBar {phone} {whatsapp} booking={site.modules.booking} bookLabel={site.labels.bookCta} />
 
 {#if site.analytics.ga4Id}<Analytics id={site.analytics.ga4Id} />{/if}
-{#if site.chatbot.provider !== 'none'}<ChatWidget config={site.chatbot} />{/if}
+{#if site.chatbot.provider !== 'none'}<ChatWidget config={site.chatbot} scripts={data.chatScripts} />{/if}

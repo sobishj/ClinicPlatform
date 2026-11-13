@@ -8,7 +8,7 @@ First client: **Orchid Dental Care**.
 - **Runs on:** Cloudflare Workers free tier (D1 + R2 + Turnstile), **or** any Linux server (Node + SQLite file + local disk/S3)
 - **Same code for both:** `DEPLOY_TARGET=cloudflare|node` picks the adapter and the platform module at build time
 
-> Status: Phases 1–4 complete (foundation, content management, public website, booking). See [Build phases](#build-phases).
+> Status: Phases 1–5 complete (foundation, content, public website, booking, integrations). See [Build phases](#build-phases).
 
 ---
 
@@ -100,5 +100,5 @@ Every admin load/action checks permissions on the server (`requirePermission`), 
 2. **Content management** ✅ — locations (Google Maps), doctors (photos, per-branch schedules), services, certifications, hero slides, media library, homepage sections, testimonials, FAQs, pages.
 3. **Public website** ✅ — all pages and homepage sections, cross-fading hero, sticky header + mobile bar, SEO/JSON-LD, sitemap.
 4. **Booking** ✅ — request flow (branch → doctor → day/time → details), optional live slots per branch with double-booking protection, notifications, admin list/detail/calendar, add-by-phone, CSV export, contact inbox.
-5. Integrations (API, webhooks, chatbot).
+5. **Integrations** ✅ — REST API + OpenAPI, scoped API keys, signed webhooks with retries, integration/notification adapters, chatbot module.
 6. Deployment and hardening.

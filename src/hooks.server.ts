@@ -4,9 +4,14 @@ import { loadSettings } from '#lib/server/settings.js';
 import { validateSession, SESSION_COOKIE } from '#lib/server/auth.js';
 import { buildCsp } from '#lib/server/csp.js';
 import { randomToken } from '#lib/server/crypto.js';
+import { primeEmbedHashes } from '#lib/chatbot/embed.js';
+import { processDueDeliveries } from '#lib/server/integrations/webhooks.js';
+import { background } from '#lib/server/platform.js';
 
 /** Anonymous public pages are cached for this long (and invalidated on any content change). */
 const PAGE_CACHE_SECONDS = 600;
+/** Webhook retries also run opportunistically (in the background) on admin traffic. */
+let lastRetrySweep = 0;
 const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/setup', '/admin/forgot', '/admin/reset'];
 
 function isCacheable(event: Parameters<Handle>[0]['event']): boolean {
@@ -47,6 +52,16 @@ export const handle: Handle = async ({ event, resolve }) => {
 			});
 		}
 		return new Response('Unauthorized', { status: 401 });
+	}
+
+	if (isAdmin && event.locals.user && Date.now() - lastRetrySweep > 5 * 60_000) {
+		lastRetrySweep = Date.now();
+		background(event.platform, processDueDeliveries(db, 10));
+	}
+
+	// Inline chatbot snippets need their CSP hashes computed before the header is built.
+	if (settings.modules.chatbot && settings.chatbot.provider === 'embed' && settings.chatbot.embedCode) {
+		await primeEmbedHashes(settings.chatbot.embedCode);
 	}
 
 	const cacheable = isCacheable(event);
