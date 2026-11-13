@@ -89,6 +89,9 @@ async function withFreshNonce(hit: Response): Promise<Response> {
 	const old = csp ? /'nonce-([^']+)'/.exec(csp)?.[1] : undefined;
 	const headers = new Headers(hit.headers);
 	headers.set('x-cache', 'HIT');
+	// Body may change length (nonce swap) and is never re-compressed here.
+	headers.delete('content-length');
+	headers.delete('content-encoding');
 	if (!old || !(headers.get('content-type') ?? '').includes('text/html')) {
 		return new Response(hit.body, { status: hit.status, headers });
 	}

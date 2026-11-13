@@ -447,6 +447,25 @@ export const appointmentNotes = sqliteTable(
 	(t) => [index('appt_notes_idx').on(t.appointmentId)]
 );
 
+/** Contact-form messages (kept even when no email provider is configured). */
+export const messages = sqliteTable(
+	'messages',
+	{
+		id: id(),
+		locationId: text('location_id'),
+		name: text('name').notNull(),
+		phone: text('phone'),
+		email: text('email'),
+		subject: text('subject'),
+		body: text('body').notNull(),
+		consentAt: integer('consent_at').notNull(),
+		/** new | read | archived */
+		status: text('status').notNull().default('new'),
+		createdAt: createdAt()
+	},
+	(t) => [index('messages_created_idx').on(t.createdAt)]
+);
+
 // ───────────────────────── rate limits ─────────────────────────
 
 export const rateLimits = sqliteTable('rate_limits', {

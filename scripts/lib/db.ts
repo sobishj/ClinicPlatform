@@ -45,6 +45,7 @@ export const TABLE_ORDER = [
 	'pages',
 	'appointments',
 	'appointment_notes',
+	'messages',
 	'api_keys',
 	'webhooks',
 	'webhook_deliveries',

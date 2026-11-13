@@ -8,7 +8,7 @@ First client: **Orchid Dental Care**.
 - **Runs on:** Cloudflare Workers free tier (D1 + R2 + Turnstile), **or** any Linux server (Node + SQLite file + local disk/S3)
 - **Same code for both:** `DEPLOY_TARGET=cloudflare|node` picks the adapter and the platform module at build time
 
-> Status: Phases 1–2 complete (foundation, content management). See [Build phases](#build-phases).
+> Status: Phases 1–3 complete (foundation, content management, public website). See [Build phases](#build-phases).
 
 ---
 
@@ -98,7 +98,7 @@ Every admin load/action checks permissions on the server (`requirePermission`), 
 
 1. **Foundation** ✅ — project setup, both adapters, db/storage/email providers, schema + migrations, auth and roles, admin layout, settings and branding (CSS variables), seed script.
 2. **Content management** ✅ — locations (Google Maps), doctors (photos, per-branch schedules), services, certifications, hero slides, media library, homepage sections, testimonials, FAQs, pages.
-3. Public website.
+3. **Public website** ✅ — all pages and homepage sections, cross-fading hero, sticky header + mobile bar, SEO/JSON-LD, sitemap.
 4. Booking feature.
 5. Integrations (API, webhooks, chatbot).
 6. Deployment and hardening.
