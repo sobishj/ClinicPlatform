@@ -136,7 +136,7 @@
 					{/if}
 					<div class="absolute inset-0 bg-gradient-to-r from-secondary/70 via-secondary/25 to-transparent" aria-hidden="true"></div>
 					<div class="absolute inset-0 bg-secondary" style="opacity: {s.overlay / 100}" aria-hidden="true"></div>
-					<div class="relative container-page flex h-full flex-col justify-center pt-8 pb-24">
+					<div class="relative container-page flex h-full flex-col justify-center pt-8 pb-24 md:pb-36">
 						<div class="flex max-w-2xl flex-col {alignCls(s.align)}">
 							{#if s.heading}
 								{#if i === 0}
@@ -159,7 +159,8 @@
 		</div>
 
 		{#if multi}
-			<div class="absolute inset-x-0 bottom-6 z-20">
+			<!-- md+: lifted above the intent cards that overlap the bottom of the hero -->
+			<div class="absolute inset-x-0 bottom-6 z-20 md:bottom-20">
 				<div class="container-page flex items-center gap-3">
 					{#if settings.showArrows}
 						<button type="button" class="flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/30" aria-label="Previous slide" onclick={() => go(index - 1, true)}>

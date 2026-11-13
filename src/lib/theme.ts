@@ -49,11 +49,10 @@ export function googleFontsUrl(t: Pick<ThemeLike, 'headingFont' | 'bodyFont'>): 
 	const q = families
 		.map((f) => {
 			const name = f.replace(/ /g, '+');
-			return SERIF.has(f) && f !== 'DM Serif Display'
-				? `family=${name}:wght@400;500;600;700`
-				: f === 'DM Serif Display'
-					? `family=${name}`
-					: `family=${name}:wght@400;500;600;700`;
+			// Fraunces: load the optical-size axis and switch its "wonky" alternates off
+			// (otherwise large headings get a leaning, curly f, h, m and n).
+			if (f === 'Fraunces') return `family=${name}:opsz,wght,SOFT,WONK@9..144,400..700,0,0`;
+			return f === 'DM Serif Display' ? `family=${name}` : `family=${name}:wght@400;500;600;700`;
 		})
 		.join('&');
 	return `https://fonts.googleapis.com/css2?${q}&display=swap`;
