@@ -78,5 +78,14 @@
 				</a>
 			</li>
 		{/if}
+		{#if can(data.user, 'settings:manage')}
+			<li>
+				<a href="/admin/settings" class="card flex items-center gap-4 p-4 hover:border-primary">
+					<span class="flex size-11 items-center justify-center rounded-xl bg-primary text-white"><Icon name="sparkles" /></span>
+					<span class="flex-1"><span class="block font-semibold">Colours & branding</span><span class="text-sm text-muted">Colour theme, logo, fonts</span></span>
+					<Icon name="chevron-right" class="text-muted" />
+				</a>
+			</li>
+		{/if}
 	</ul>
 </section>
