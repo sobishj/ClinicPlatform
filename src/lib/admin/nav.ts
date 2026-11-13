@@ -39,7 +39,7 @@ export const ADMIN_NAV: NavGroup[] = [
 	{
 		label: 'Settings',
 		items: [
-			{ href: '/admin/settings', label: 'Clinic & branding', icon: 'sparkles', permission: 'settings:manage' },
+			{ href: '/admin/settings', label: 'Colours & branding', icon: 'sparkles', permission: 'settings:manage' },
 			{ href: '/admin/settings/site', label: 'Type, labels & modules', icon: 'settings', permission: 'settings:manage' },
 			{ href: '/admin/settings/booking', label: 'Booking', icon: 'calendar', permission: 'settings:manage' },
 			{ href: '/admin/settings/notifications', label: 'Notifications & email', icon: 'mail', permission: 'settings:manage' },

@@ -153,8 +153,9 @@ export function pageHelp(routeId: string | null, l: Labels): PageHelp | null {
 			]
 		},
 		'/admin/settings': {
-			purpose: 'Your clinic’s identity: name, contact details, logo, colours and fonts.',
+			purpose: 'Your clinic’s look and identity: colour theme, logo, fonts, name and contact details.',
 			points: [
+				'Colour theme: click a ready-made theme, or open “Customise colours” to use your exact brand colours. A message tells you if any text would be hard to read.',
 				'Phone numbers, WhatsApp and email appear in the header, footer and contact page.',
 				'The live preview on the right shows how colour and font changes will look.',
 				'Time zone is used for opening hours and appointment times.'

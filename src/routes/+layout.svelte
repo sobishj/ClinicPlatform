@@ -7,7 +7,8 @@
 	let { data, children }: LayoutProps = $props();
 
 	const theme = $derived(data.site.theme);
-	const css = $derived(`<style>:root{${themeCss(theme)}}</style>`);
+	// `html:root` outranks the defaults in app.css regardless of stylesheet order.
+	const css = $derived(`<style>html:root{${themeCss(theme)}}</style>`);
 	const favicon = $derived(data.site.clinic.favicon?.url ?? data.site.clinic.logo?.url ?? '/favicon.svg');
 	const fontsUrl = $derived(googleFontsUrl(theme));
 
