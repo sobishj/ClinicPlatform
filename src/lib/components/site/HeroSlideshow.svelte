@@ -70,7 +70,10 @@
 
 	$effect(() => {
 		if (!autoplay) return;
-		const t = setTimeout(() => go(index + 1), settings.intervalSeconds * 1000);
+		// Read `index` here (not only inside the timer) so the effect re-runs after every
+		// slide change and schedules the next one — that is what keeps the loop going.
+		const next = index + 1;
+		const t = setTimeout(() => go(next), settings.intervalSeconds * 1000);
 		return () => clearTimeout(t);
 	});
 
