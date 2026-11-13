@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
 <defs>
-<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6efe3"/><stop offset="1" stop-color="#f7eadf"/></linearGradient>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9f2dd"/><stop offset="1" stop-color="#fff0cc"/></linearGradient>
 <linearGradient id="light" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity=".25"/></linearGradient>
 </defs>
 <rect width="1920" height="1080" fill="url(#bg)"/>
 <rect x="1120" y="120" width="620" height="700" rx="24" fill="url(#light)"/>
-<path d="M1120 470h620M1430 120v700" stroke="#b7d1b0" stroke-width="10" opacity=".55"/>
-<rect x="0" y="830" width="1920" height="250" fill="#b7d1b0" opacity=".35"/>
-<rect x="320" y="640" width="520" height="190" rx="40" fill="#e8c3a8" opacity=".9"/>
-<rect x="360" y="560" width="440" height="120" rx="36" fill="#e8c3a8"/>
-<rect x="350" y="830" width="20" height="90" fill="#3b5040" opacity=".5"/><rect x="790" y="830" width="20" height="90" fill="#3b5040" opacity=".5"/>
-<g transform="translate(1700 560)"><rect x="-55" y="200" width="110" height="130" rx="16" fill="#3b5040" opacity=".55"/>
-<path d="M0 210C-10 120-90 90-120 20 -40 40-10 100 0 150 10 80 30 20 90-30 80 60 30 120 0 210Z" fill="#b7d1b0"/>
-<path d="M0 205C15 140 70 110 110 80 90 150 40 180 0 205Z" fill="#3b5040" opacity=".35"/></g>
+<path d="M1120 470h620M1430 120v700" stroke="#4fc59a" stroke-width="10" opacity=".55"/>
+<rect x="0" y="830" width="1920" height="250" fill="#4fc59a" opacity=".35"/>
+<rect x="320" y="640" width="520" height="190" rx="40" fill="#ffc857" opacity=".9"/>
+<rect x="360" y="560" width="440" height="120" rx="36" fill="#ffc857"/>
+<rect x="350" y="830" width="20" height="90" fill="#145a4a" opacity=".5"/><rect x="790" y="830" width="20" height="90" fill="#145a4a" opacity=".5"/>
+<g transform="translate(1700 560)"><rect x="-55" y="200" width="110" height="130" rx="16" fill="#145a4a" opacity=".55"/>
+<path d="M0 210C-10 120-90 90-120 20 -40 40-10 100 0 150 10 80 30 20 90-30 80 60 30 120 0 210Z" fill="#4fc59a"/>
+<path d="M0 205C15 140 70 110 110 80 90 150 40 180 0 205Z" fill="#145a4a" opacity=".35"/></g>
 <circle cx="960" cy="220" r="150" fill="#fff" opacity=".35"/>
 </svg>

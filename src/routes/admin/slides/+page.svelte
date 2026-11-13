@@ -108,7 +108,7 @@
 					{#if editing.image}
 						<div class="relative aspect-video overflow-hidden rounded-lg">
 							<img src={editing.image.url} alt="" class="absolute inset-0 h-full w-full object-cover" />
-							<div class="absolute inset-0 bg-black" style="opacity:{editing.overlay / 100}"></div>
+							<div class="absolute inset-0 bg-secondary" style="opacity:{editing.overlay / 100}"></div>
 							<div class="relative flex h-full flex-col justify-center p-5 text-white {editing.align === 'center' ? 'items-center text-center' : editing.align === 'right' ? 'items-end text-right' : ''}">
 								<p class="font-heading text-xl">{editing.heading}</p>
 								<p class="text-sm opacity-90">{editing.subheading}</p>

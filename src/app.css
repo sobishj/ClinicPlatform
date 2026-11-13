@@ -7,10 +7,10 @@
  * theme settings, so every clinic can be re-branded from the admin panel without a rebuild.
  */
 :root {
-	--brand-primary: #0f6b63;
-	--brand-secondary: #24324a;
-	--brand-accent: #e8a05c;
-	--brand-bg: #fbf8f4;
+	--brand-primary: #0a7d8c;
+	--brand-secondary: #16216b;
+	--brand-accent: #ff7a59;
+	--brand-bg: #f4fbfb;
 	--brand-font-heading: 'Fraunces';
 	--brand-font-body: 'DM Sans';
 	--brand-radius: 1rem;
@@ -38,7 +38,8 @@
 	--color-accent-700: color-mix(in oklab, var(--brand-accent) 55%, black);
 
 	--color-surface: var(--brand-bg);
-	--color-surface-2: color-mix(in oklab, var(--brand-bg) 92%, var(--brand-secondary));
+	/* Alternating sections are tinted with the primary colour for a fresher look. */
+	--color-surface-2: color-mix(in oklab, var(--brand-bg) 90%, var(--brand-primary));
 	--color-ink: color-mix(in oklab, var(--brand-secondary) 92%, black);
 	/* 84% keeps body-size muted text above 4.5:1 on the tinted surfaces (WCAG AA). */
 	--color-muted: color-mix(in oklab, var(--brand-secondary) 84%, white);

@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
-<rect width="1200" height="900" fill="#f6ece2"/>
-<rect y="620" width="1200" height="280" fill="#b4c6d8" opacity=".45"/>
+<rect width="1200" height="900" fill="#ffe9d1"/>
+<rect y="620" width="1200" height="280" fill="#7aa8f0" opacity=".45"/>
 <rect x="170" y="120" width="360" height="420" rx="18" fill="#fff" opacity=".7"/>
-<path d="M660 620c0-140 80-220 220-220h40c40 0 60 30 50 70l-40 150Z" fill="#efcfb4"/>
-<rect x="620" y="600" width="380" height="40" rx="20" fill="#33435a" opacity=".6"/>
-<circle cx="860" cy="230" r="70" fill="#dfe6ee"/><rect x="855" y="230" width="10" height="190" fill="#33435a" opacity=".5"/>
-<path d="M860 200a40 40 0 0 1 0 0" stroke="#33435a"/>
+<path d="M660 620c0-140 80-220 220-220h40c40 0 60 30 50 70l-40 150Z" fill="#ffb36b"/>
+<rect x="620" y="600" width="380" height="40" rx="20" fill="#1d2f7a" opacity=".6"/>
+<circle cx="860" cy="230" r="70" fill="#cfe0ff"/><rect x="855" y="230" width="10" height="190" fill="#1d2f7a" opacity=".5"/>
+<path d="M860 200a40 40 0 0 1 0 0" stroke="#1d2f7a"/>
 </svg>

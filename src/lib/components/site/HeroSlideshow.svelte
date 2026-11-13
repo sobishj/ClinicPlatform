@@ -134,8 +134,8 @@
 							/>
 						</picture>
 					{/if}
-					<div class="absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent" aria-hidden="true"></div>
-					<div class="absolute inset-0 bg-black" style="opacity: {s.overlay / 100}" aria-hidden="true"></div>
+					<div class="absolute inset-0 bg-gradient-to-r from-secondary/70 via-secondary/25 to-transparent" aria-hidden="true"></div>
+					<div class="absolute inset-0 bg-secondary" style="opacity: {s.overlay / 100}" aria-hidden="true"></div>
 					<div class="relative container-page flex h-full flex-col justify-center pt-8 pb-24">
 						<div class="flex max-w-2xl flex-col {alignCls(s.align)}">
 							{#if s.heading}

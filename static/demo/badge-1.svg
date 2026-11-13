@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
 <rect width="400" height="400" fill="#fff"/>
-<circle cx="200" cy="200" r="150" fill="#cfe0da" stroke="#2f4f4a" stroke-width="8"/>
-<circle cx="200" cy="200" r="120" fill="none" stroke="#2f4f4a" stroke-width="3" stroke-dasharray="6 8"/>
-<path d="M150 205l35 35 70-80" stroke="#2f4f4a" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="200" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="700" fill="#2f4f4a">QUALITY</text>
-<text x="200" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" letter-spacing="3" fill="#2f4f4a">CERTIFIED</text>
+<circle cx="200" cy="200" r="150" fill="#bfe9ec" stroke="#0b4f6b" stroke-width="8"/>
+<circle cx="200" cy="200" r="120" fill="none" stroke="#0b4f6b" stroke-width="3" stroke-dasharray="6 8"/>
+<path d="M150 205l35 35 70-80" stroke="#0b4f6b" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="200" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="700" fill="#0b4f6b">QUALITY</text>
+<text x="200" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" letter-spacing="3" fill="#0b4f6b">CERTIFIED</text>
 </svg>

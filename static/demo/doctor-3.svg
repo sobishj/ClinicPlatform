@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
-<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6efe3"/><stop offset="1" stop-color="#f7eadf"/></linearGradient></defs>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9f2dd"/><stop offset="1" stop-color="#fff0cc"/></linearGradient></defs>
 <rect width="800" height="1000" fill="url(#bg)"/>
 <circle cx="620" cy="180" r="160" fill="#fff" opacity=".35"/>
 <path d="M120 1000c0-200 120-330 280-330s280 130 280 330Z" fill="#ffffff"/>
-<path d="M330 690l70 120 70-120" fill="#b7d1b0"/>
+<path d="M330 690l70 120 70-120" fill="#4fc59a"/>
 <path d="M300 700c-40 60-60 150-60 300h40c0-120 20-210 50-270ZM500 700c40 60 60 150 60 300h-40c0-120-20-210-50-270Z" fill="#e8ecef"/>
 <rect x="355" y="560" width="90" height="140" rx="40" fill="#e2b896"/>
 <ellipse cx="400" cy="440" rx="140" ry="165" fill="#e2b896"/>
 <path d="M260 430c-10-140 60-210 150-210 100 0 160 70 140 210-20-70-60-110-140-110-70 0-120 40-150 110Z" fill="#1f1b1a"/>
-<path d="M330 800c0 40 30 70 70 70" stroke="#3b5040" stroke-width="10" fill="none" opacity=".6"/>
-<circle cx="400" cy="878" r="16" fill="#3b5040" opacity=".6"/>
+<path d="M330 800c0 40 30 70 70 70" stroke="#145a4a" stroke-width="10" fill="none" opacity=".6"/>
+<circle cx="400" cy="878" r="16" fill="#145a4a" opacity=".6"/>
 </svg>

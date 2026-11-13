@@ -10,10 +10,10 @@ const out = path.resolve('static/demo');
 mkdirSync(out, { recursive: true });
 
 const palettes = [
-	{ a: '#cfe0da', b: '#f4e6d6', c: '#9cc2b8', d: '#e9c9a6', ink: '#2f4f4a' },
-	{ a: '#dfe6ee', b: '#f6ece2', c: '#b4c6d8', d: '#efcfb4', ink: '#33435a' },
-	{ a: '#e6efe3', b: '#f7eadf', c: '#b7d1b0', d: '#e8c3a8', ink: '#3b5040' },
-	{ a: '#efe4dc', b: '#e3ecef', c: '#d7b9a5', d: '#a9c4cc', ink: '#4a3b35' }
+	{ a: '#bfe9ec', b: '#ffe3d6', c: '#5cc4cc', d: '#ff9f80', ink: '#0b4f6b' },
+	{ a: '#cfe0ff', b: '#ffe9d1', c: '#7aa8f0', d: '#ffb36b', ink: '#1d2f7a' },
+	{ a: '#c9f2dd', b: '#fff0cc', c: '#4fc59a', d: '#ffc857', ink: '#145a4a' },
+	{ a: '#ffd9e2', b: '#d6f4f6', c: '#ff8fa8', d: '#4fc3cf', ink: '#5a2346' }
 ];
 
 function hero(i: number) {
@@ -114,7 +114,7 @@ const badges = [
 	['CARE', 'EXCELLENCE']
 ];
 badges.forEach(([l, s], i) => (files[`badge-${i + 1}.svg`] = badge(i, l, s)));
-files['logo.svg'] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0f6b63"/><path d="M22 18c-5 0-8 4-8 9 0 4 1.6 6.8 2.8 10 1.4 3.8 1.6 8 2.6 12 .8 3.2 2 5 3.8 5 2.6 0 3-3.6 3.6-6.8.6-3 1.4-6.2 4.2-6.2s3.6 3.2 4.2 6.2c.6 3.2 1 6.8 3.6 6.8 1.8 0 3-1.8 3.8-5 1-4 1.2-8.2 2.6-12C48.4 33.8 50 31 50 27c0-5-3-9-8-9-3.8 0-5.8 2.4-9 2.4S25.8 18 22 18Z" fill="#fff"/></svg>`;
+files['logo.svg'] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0a7d8c"/><path d="M22 18c-5 0-8 4-8 9 0 4 1.6 6.8 2.8 10 1.4 3.8 1.6 8 2.6 12 .8 3.2 2 5 3.8 5 2.6 0 3-3.6 3.6-6.8.6-3 1.4-6.2 4.2-6.2s3.6 3.2 4.2 6.2c.6 3.2 1 6.8 3.6 6.8 1.8 0 3-1.8 3.8-5 1-4 1.2-8.2 2.6-12C48.4 33.8 50 31 50 27c0-5-3-9-8-9-3.8 0-5.8 2.4-9 2.4S25.8 18 22 18Z" fill="#fff"/></svg>`;
 
 for (const [name, svg] of Object.entries(files)) writeFileSync(path.join(out, name), svg.trim() + '\n');
 console.log(`Wrote ${Object.keys(files).length} files to ${out}`);

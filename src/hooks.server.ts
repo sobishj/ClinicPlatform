@@ -1,4 +1,5 @@
 import type { Handle, HandleServerError } from '@sveltejs/kit/hooks';
+import { dev } from '$app/env';
 import { getDb, cacheGet, cachePut } from '#lib/server/platform.js';
 import { loadSettings } from '#lib/server/settings.js';
 import { validateSession, SESSION_COOKIE } from '#lib/server/auth.js';
@@ -15,6 +16,8 @@ let lastRetrySweep = 0;
 const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/setup', '/admin/forgot', '/admin/reset'];
 
 function isCacheable(event: Parameters<Handle>[0]['event']): boolean {
+	// Never cache while developing, so code changes show up immediately.
+	if (dev) return false;
 	if (event.request.method !== 'GET') return false;
 	const p = event.url.pathname;
 	if (p.startsWith('/admin') || p.startsWith('/api/') || p.startsWith('/media/') || p.startsWith('/book/')) return false;

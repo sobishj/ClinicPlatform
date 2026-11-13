@@ -120,13 +120,14 @@
 		implant: '<path d="M7 3h10c0 3-2 5-5 5S7 6 7 3Z"/><path d="M9 10h6M9.5 13h5M10 16h4M10.5 19h3M12 8v14"/>',
 		braces:
 			'<rect x="3" y="8" width="5" height="8" rx="1.5"/><rect x="9.5" y="8" width="5" height="8" rx="1.5"/><rect x="16" y="8" width="5" height="8" rx="1.5"/><path d="M2 12h20"/>',
-		facebook: '<path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V9H6.5v3.5H9V21h3.5v-8.5H15l.5-3.5h-3V7a1 1 0 0 1 1-1H15Z"/>',
+		// Social icons are one matching set: a rounded square frame with the glyph inside,
+		// same stroke weight, so they read as the same colour and size side by side.
+		facebook: '<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M15.5 7.5h-1.5A2.5 2.5 0 0 0 11.5 10v11M9 13h5.5"/>',
 		instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/>',
-		youtube: '<rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3Z" fill="currentColor"/>',
-		linkedin: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.5v.01M12 17v-6.5M12 13.5c0-1.8 1-3 2.5-3s2.5 1 2.5 3V17"/>',
-		x: '<path d="M4 4l16 16M20 4 4 20"/>',
-		google:
-			'<path d="M20.5 12.2c0-.6-.1-1.2-.2-1.7H12v3.3h4.8a4.2 4.2 0 0 1-1.8 2.7v2.2h2.9c1.7-1.6 2.6-3.9 2.6-6.5Z"/><path d="M12 21c2.4 0 4.5-.8 5.9-2.2L15 16.5c-.8.6-1.8.9-3 .9-2.3 0-4.3-1.6-5-3.7H4v2.3A9 9 0 0 0 12 21Z"/><path d="M7 13.7a5.4 5.4 0 0 1 0-3.4V8H4a9 9 0 0 0 0 8Z"/><path d="M12 6.6c1.3 0 2.5.5 3.4 1.3l2.6-2.6A9 9 0 0 0 4 8l3 2.3c.7-2.1 2.7-3.7 5-3.7Z"/>',
+		youtube: '<rect x="3" y="3" width="18" height="18" rx="5"/><path d="m10 8.5 5.5 3.5-5.5 3.5Z"/>',
+		linkedin: '<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M8 10.5V16.5M8 7.5v.01M12 16.5v-6M12 13c0-1.6 1-2.5 2.3-2.5S16.5 11.4 16.5 13v3.5"/>',
+		x: '<rect x="3" y="3" width="18" height="18" rx="5"/><path d="m8 8 8 8M16 8l-8 8"/>',
+		google: '<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M16.5 12h-4.5M16.5 12a4.5 4.5 0 1 1-1.4-3.25"/>',
 		whatsapp: '<path d="M3.5 20.5 5 16.3A8.5 8.5 0 1 1 8 19.2Z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.5-2-1-1 .7c-1-.4-2.3-1.7-2.7-2.7l.7-1-1-2Z"/>'
 	};
 

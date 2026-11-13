@@ -33,10 +33,10 @@ export function themeCss(t: ThemeLike): string {
 	const heading = safeFont(t.headingFont, 'Fraunces');
 	const body = safeFont(t.bodyFont, 'DM Sans');
 	return [
-		`--brand-primary:${safeColor(t.primary, '#0f6b63')}`,
-		`--brand-secondary:${safeColor(t.secondary, '#24324a')}`,
-		`--brand-accent:${safeColor(t.accent, '#e8a05c')}`,
-		`--brand-bg:${safeColor(t.background, '#fbf8f4')}`,
+		`--brand-primary:${safeColor(t.primary, '#0a7d8c')}`,
+		`--brand-secondary:${safeColor(t.secondary, '#16216b')}`,
+		`--brand-accent:${safeColor(t.accent, '#ff7a59')}`,
+		`--brand-bg:${safeColor(t.background, '#f4fbfb')}`,
 		`--brand-font-heading:'${heading}'`,
 		`--brand-font-body:'${body}'`,
 		`--brand-radius:${RADIUS[t.radius] ?? RADIUS.soft}`

@@ -14,7 +14,7 @@ describe('settings schema', () => {
 	it('keeps valid fields and defaults invalid ones', () => {
 		const theme = parseSettingsGroup('theme', { primary: '#112233', secondary: 'not-a-colour' });
 		expect(theme.primary).toBe('#112233');
-		expect(theme.secondary).toBe('#24324a');
+		expect(theme.secondary).toBe('#16216b');
 	});
 
 	it('accepts Indian mobile numbers with the default pattern', () => {

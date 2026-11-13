@@ -250,7 +250,7 @@
 	{:else if s.id === 'cta'}
 		<section class="section" aria-labelledby="h-cta">
 			<div class="container-page">
-				<div class="relative overflow-hidden rounded-brand bg-primary-800 px-6 py-14 text-center text-white sm:px-12">
+				<div class="relative overflow-hidden rounded-brand bg-gradient-to-br from-primary-700 to-secondary px-6 py-14 text-center text-white sm:px-12">
 					<div class="pointer-events-none absolute -top-24 -right-24 size-72 rounded-full bg-white/5" aria-hidden="true"></div>
 					<div class="pointer-events-none absolute -bottom-32 -left-16 size-80 rounded-full bg-accent/20" aria-hidden="true"></div>
 					<h2 id="h-cta" class="relative text-3xl text-white sm:text-4xl">{s.heading}</h2>

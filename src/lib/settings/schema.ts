@@ -80,10 +80,10 @@ export const clinicSchema = z.object({
 });
 
 export const themeSchema = z.object({
-	primary: color('#0f6b63'),
-	secondary: color('#24324a'),
-	accent: color('#e8a05c'),
-	background: color('#fbf8f4'),
+	primary: color('#0a7d8c'),
+	secondary: color('#16216b'),
+	accent: color('#ff7a59'),
+	background: color('#f4fbfb'),
 	headingFont: z.string().default('Fraunces'),
 	bodyFont: z.string().default('DM Sans'),
 	radius: z.enum(['square', 'soft', 'round']).default('soft')

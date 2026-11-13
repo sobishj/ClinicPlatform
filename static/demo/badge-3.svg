@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
 <rect width="400" height="400" fill="#fff"/>
-<circle cx="200" cy="200" r="150" fill="#e6efe3" stroke="#3b5040" stroke-width="8"/>
-<circle cx="200" cy="200" r="120" fill="none" stroke="#3b5040" stroke-width="3" stroke-dasharray="6 8"/>
-<path d="M150 205l35 35 70-80" stroke="#3b5040" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="200" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="700" fill="#3b5040">HYGIENE</text>
-<text x="200" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" letter-spacing="3" fill="#3b5040">AUDITED</text>
+<circle cx="200" cy="200" r="150" fill="#c9f2dd" stroke="#145a4a" stroke-width="8"/>
+<circle cx="200" cy="200" r="120" fill="none" stroke="#145a4a" stroke-width="3" stroke-dasharray="6 8"/>
+<path d="M150 205l35 35 70-80" stroke="#145a4a" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="200" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="700" fill="#145a4a">HYGIENE</text>
+<text x="200" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" letter-spacing="3" fill="#145a4a">AUDITED</text>
 </svg>
