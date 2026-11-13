@@ -410,6 +410,8 @@ export const SECRET_FIELDS: { [K in SettingsKey]?: string[] } = {
 
 /** Who may edit each group. Everything not listed needs super_admin. */
 export const CONTENT_SETTINGS: SettingsKey[] = ['homepage', 'hero', 'banner', 'disclaimer'];
+/** Groups on the Colours & branding page — clinic admins may edit these too. */
+export const BRANDING_SETTINGS: SettingsKey[] = ['clinic', 'theme'];
 
 export function defaultSettings(): Settings {
 	const out = {} as Record<string, unknown>;

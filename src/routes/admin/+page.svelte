@@ -78,7 +78,7 @@
 				</a>
 			</li>
 		{/if}
-		{#if can(data.user, 'settings:manage')}
+		{#if can(data.user, 'branding:manage')}
 			<li>
 				<a href="/admin/settings" class="card flex items-center gap-4 p-4 hover:border-primary">
 					<span class="flex size-11 items-center justify-center rounded-xl bg-primary text-white"><Icon name="sparkles" /></span>

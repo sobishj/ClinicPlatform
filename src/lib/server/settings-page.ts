@@ -4,10 +4,12 @@ import { requirePermission } from './auth.js';
 import { saveSettings, stripSecrets, secretPresence, envManaged } from './settings.js';
 import { parsePayload } from './forms.js';
 import { audit } from './audit.js';
-import { settingsSchemas, CONTENT_SETTINGS, type Settings, type SettingsKey } from '../settings/schema.js';
+import { settingsSchemas, CONTENT_SETTINGS, BRANDING_SETTINGS, type Settings, type SettingsKey } from '../settings/schema.js';
 
 function permissionFor(keys: SettingsKey[]) {
-	return keys.every((k) => CONTENT_SETTINGS.includes(k)) ? 'content:write' : 'settings:manage';
+	if (keys.every((k) => CONTENT_SETTINGS.includes(k))) return 'content:write';
+	if (keys.every((k) => BRANDING_SETTINGS.includes(k))) return 'branding:manage';
+	return 'settings:manage';
 }
 
 /** Load settings groups for an admin form (secrets removed, presence flags included). */

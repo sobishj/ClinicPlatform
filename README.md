@@ -190,7 +190,7 @@ The database moves with `wrangler d1 export/execute` (an existing local file is 
 | Role | Can do |
 | --- | --- |
 | Super admin | Everything, including settings, users, integrations |
-| Clinic admin | All content and all appointments |
+| Clinic admin | All content, colours & branding, and all appointments |
 | Branch staff | Appointments for their assigned branch(es) only; content read-only |
 
 Every admin load/action checks permissions on the server; `hooks.server.ts` also blocks unauthenticated `/admin/*`. All changes are written to the **audit log**.

@@ -6,6 +6,8 @@ import type { Role, SessionUser } from './types.js';
 
 export type Permission =
 	| 'settings:manage'
+	/** Colour theme, logo, fonts and clinic contact details (Colours & branding page). */
+	| 'branding:manage'
 	| 'users:manage'
 	| 'integrations:manage'
 	| 'audit:read'
@@ -19,6 +21,7 @@ export type Permission =
 const MATRIX: Record<Role, Permission[]> = {
 	super_admin: [
 		'settings:manage',
+		'branding:manage',
 		'users:manage',
 		'integrations:manage',
 		'audit:read',
@@ -30,6 +33,7 @@ const MATRIX: Record<Role, Permission[]> = {
 		'appointments:export'
 	],
 	clinic_admin: [
+		'branding:manage',
 		'audit:read',
 		'content:read',
 		'content:write',
