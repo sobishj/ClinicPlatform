@@ -58,7 +58,7 @@
 			<a href="mailto:{site.clinic.email}" class="inline-flex items-center gap-1.5 hover:text-white"><Icon name="mail" size={15} /> {site.clinic.email}</a>
 		{/if}
 		<div class="flex-1"></div>
-		<SocialLinks social={site.clinic.social} size={16} />
+		<SocialLinks social={site.clinic.social} size={18} />
 	</div>
 </div>
 

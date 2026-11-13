@@ -39,7 +39,7 @@
 				<span class="font-heading text-xl font-semibold text-white">{site.clinic.name}</span>
 			</a>
 			{#if site.clinic.tagline}<p class="mt-3 max-w-xs">{site.clinic.tagline}</p>{/if}
-			<SocialLinks social={site.clinic.social} class="mt-4 -ml-2 text-white" />
+			<SocialLinks social={site.clinic.social} size={24} class="mt-4 -ml-1" />
 		</div>
 
 		<nav class="lg:col-span-2" aria-label="Footer">

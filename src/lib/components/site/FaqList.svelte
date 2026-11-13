@@ -9,7 +9,7 @@
 	let { items, html = true }: Props = $props();
 </script>
 
-<div class="divide-y divide-line rounded-brand border border-line bg-white">
+<div class="divide-y divide-line rounded-brand border border-line bg-card">
 	{#each items as f, i (f.id ?? i)}
 		<details class="group" name="faq">
 			<summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left font-semibold [&::-webkit-details-marker]:hidden">

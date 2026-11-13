@@ -5,6 +5,7 @@ interface ThemeLike {
 	secondary: string;
 	accent: string;
 	background: string;
+	card?: string;
 	headingFont: string;
 	bodyFont: string;
 	radius: 'square' | 'soft' | 'round';
@@ -37,6 +38,7 @@ export function themeCss(t: ThemeLike): string {
 		`--brand-secondary:${safeColor(t.secondary, '#16216b')}`,
 		`--brand-accent:${safeColor(t.accent, '#ff7a59')}`,
 		`--brand-bg:${safeColor(t.background, '#f4fbfb')}`,
+		`--brand-card:${safeColor(t.card ?? '#ffffff', '#ffffff')}`,
 		`--brand-font-heading:'${heading}'`,
 		`--brand-font-body:'${body}'`,
 		`--brand-radius:${RADIUS[t.radius] ?? RADIUS.soft}`

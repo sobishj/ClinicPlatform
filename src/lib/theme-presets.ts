@@ -24,5 +24,7 @@ export const THEME_PRESETS: ThemePreset[] = [
 /** Which preset (if any) matches the given colours exactly. */
 export function matchingPreset(t: ThemeColours): ThemePreset | undefined {
 	const eq = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
-	return THEME_PRESETS.find((p) => eq(p.primary, t.primary) && eq(p.secondary, t.secondary) && eq(p.accent, t.accent) && eq(p.background, t.background));
+	return THEME_PRESETS.find(
+		(p) => eq(p.primary, t.primary) && eq(p.secondary, t.secondary) && eq(p.accent, t.accent) && eq(p.background, t.background) && eq(p.card ?? '#ffffff', t.card ?? '#ffffff')
+	);
 }

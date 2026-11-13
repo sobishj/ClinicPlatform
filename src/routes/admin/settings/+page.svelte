@@ -34,12 +34,14 @@
 		theme.secondary = p.secondary;
 		theme.accent = p.accent;
 		theme.background = p.background;
+		theme.card = p.card ?? '#ffffff';
 	}
-	const colourFields: Array<['primary' | 'secondary' | 'accent' | 'background', string]> = [
+	const colourFields: Array<['primary' | 'secondary' | 'accent' | 'background' | 'card', string]> = [
 		['primary', 'Primary (buttons, links)'],
 		['secondary', 'Secondary (text, top bar, footer)'],
 		['accent', 'Accent (highlights, badges)'],
-		['background', 'Page background']
+		['background', 'Page background'],
+		['card', 'Cards & panels']
 	];
 </script>
 

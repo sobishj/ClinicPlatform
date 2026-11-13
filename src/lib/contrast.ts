@@ -51,6 +51,8 @@ export interface ThemeColours {
 	secondary: string;
 	accent: string;
 	background: string;
+	/** Card/panel colour (default white). */
+	card?: string;
 }
 
 export interface ContrastCheck {
@@ -65,13 +67,15 @@ export const AA = 4.5;
 
 /** The text/background pairs the website actually uses, with their contrast ratios. */
 export function checkTheme(t: ThemeColours): ContrastCheck[] {
-	if (![t.primary, t.secondary, t.accent, t.background].every((c) => HEX.test(c))) return [];
+	const cardHex = t.card ?? '#ffffff';
+	if (![t.primary, t.secondary, t.accent, t.background, cardHex].every((c) => HEX.test(c))) return [];
 	const W: RGB = [1, 1, 1];
 	const K: RGB = [0, 0, 0];
 	const P = hex(t.primary);
 	const S = hex(t.secondary);
 	const Ac = hex(t.accent);
 	const BG = hex(t.background);
+	const CARD = hex(cardHex);
 	// Same recipes as the tokens in app.css.
 	const surface2 = mix(BG, P, 0.9);
 	const muted = mix(S, W, 0.84);
@@ -85,6 +89,9 @@ export function checkTheme(t: ThemeColours): ContrastCheck[] {
 		['Links and small headings on tinted sections', p700, surface2],
 		['Grey text on tinted sections', muted, surface2],
 		['Main text on the page background', ink, BG],
+		['Main text on cards', ink, CARD],
+		['Grey text on cards', muted, CARD],
+		['Links on cards', p700, CARD],
 		['Text on accent buttons', ink, Ac],
 		['Badges and icons on accent backgrounds', a700, a100],
 		['White text on the top bar and footer (secondary)', W, S]

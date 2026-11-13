@@ -84,6 +84,8 @@ export const themeSchema = z.object({
 	secondary: color('#16216b'),
 	accent: color('#ff7a59'),
 	background: color('#f4fbfb'),
+	/** Cards and panels on the public site (branch, doctor, service, review cards…). */
+	card: color('#ffffff'),
 	headingFont: z.string().default('Fraunces'),
 	bodyFont: z.string().default('DM Sans'),
 	radius: z.enum(['square', 'soft', 'round']).default('soft')

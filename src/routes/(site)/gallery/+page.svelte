@@ -15,9 +15,9 @@
 <div class="container-page py-12">
 	{#if categories.length > 1}
 		<div class="mb-6 flex flex-wrap gap-2" role="group" aria-label="Filter photos">
-			<button type="button" class="rounded-full px-4 py-2 text-sm font-medium {filter === '' ? 'bg-primary text-white' : 'border border-line bg-white'}" aria-pressed={filter === ''} onclick={() => (filter = '')}>All</button>
+			<button type="button" class="rounded-full px-4 py-2 text-sm font-medium {filter === '' ? 'bg-primary text-white' : 'border border-line bg-card'}" aria-pressed={filter === ''} onclick={() => (filter = '')}>All</button>
 			{#each categories as c (c)}
-				<button type="button" class="rounded-full px-4 py-2 text-sm font-medium {filter === c ? 'bg-primary text-white' : 'border border-line bg-white'}" aria-pressed={filter === c} onclick={() => (filter = c)}>{c}</button>
+				<button type="button" class="rounded-full px-4 py-2 text-sm font-medium {filter === c ? 'bg-primary text-white' : 'border border-line bg-card'}" aria-pressed={filter === c} onclick={() => (filter = c)}>{c}</button>
 			{/each}
 		</div>
 	{/if}

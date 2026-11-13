@@ -34,7 +34,7 @@
 {#if withMap.length}
 	<div class="card overflow-hidden">
 		{#if withMap.length > 1}
-			<div role="tablist" aria-label="Choose a branch map" class="flex gap-1 overflow-x-auto border-b border-line bg-white p-2">
+			<div role="tablist" aria-label="Choose a branch map" class="flex gap-1 overflow-x-auto border-b border-line bg-card p-2">
 				{#each withMap as l, i (l.slug)}
 					<button
 						bind:this={tabs[i]}
@@ -62,7 +62,7 @@
 					referrerpolicy="no-referrer-when-downgrade"
 					allowfullscreen
 				></iframe>
-				<div class="flex flex-wrap items-center justify-between gap-3 bg-white px-4 py-3 text-sm">
+				<div class="flex flex-wrap items-center justify-between gap-3 bg-card px-4 py-3 text-sm">
 					<span class="flex items-center gap-2"><Icon name="map-pin" size={16} class="text-primary-700" /> {fullAddress(l)}</span>
 					{#if l.directionsUrl}<a href={l.directionsUrl} target="_blank" rel="noopener" class="btn-outline btn-sm">Get directions</a>{/if}
 				</div>

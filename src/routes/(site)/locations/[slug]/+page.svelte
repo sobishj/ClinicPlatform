@@ -84,7 +84,7 @@
 				<h2 id="svc-h" class="mb-4 text-2xl">{l.services} here</h2>
 				<ul class="flex flex-wrap gap-2">
 					{#each data.services as s (s.id)}
-						<li><a href="/services/{s.slug}" class="inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-sm hover:border-primary"><Icon name={s.icon ?? 'sparkles'} size={16} class="text-primary-700" /> {s.name}</a></li>
+						<li><a href="/services/{s.slug}" class="inline-flex items-center gap-2 rounded-full border border-line bg-card px-4 py-2 text-sm hover:border-primary"><Icon name={s.icon ?? 'sparkles'} size={16} class="text-primary-700" /> {s.name}</a></li>
 					{/each}
 				</ul>
 			</section>
@@ -129,7 +129,7 @@
 	<section class="py-12" aria-labelledby="other-h">
 		<div class="container-page">
 			<h2 id="other-h" class="mb-4 text-xl">Other {l.locations.toLowerCase()}</h2>
-			<ul class="flex flex-wrap gap-2">{#each data.others as o (o.id)}<li><a href="/locations/{o.slug}" class="inline-block rounded-full border border-line bg-white px-4 py-2 text-sm hover:border-primary">{o.name}</a></li>{/each}</ul>
+			<ul class="flex flex-wrap gap-2">{#each data.others as o (o.id)}<li><a href="/locations/{o.slug}" class="inline-block rounded-full border border-line bg-card px-4 py-2 text-sm hover:border-primary">{o.name}</a></li>{/each}</ul>
 		</div>
 	</section>
 {/if}

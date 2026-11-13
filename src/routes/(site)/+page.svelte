@@ -103,7 +103,7 @@
 				{#if data.serviceGroups.length > 1}
 					<ul class="mt-8 flex flex-wrap gap-2" aria-label="Browse by category">
 						{#each data.serviceGroups as g (g.category)}
-							<li><a href="/services#{slugify(g.category)}" class="inline-block rounded-full border border-line bg-white px-4 py-2 text-sm font-medium hover:border-primary hover:text-primary-700">{g.category}</a></li>
+							<li><a href="/services#{slugify(g.category)}" class="inline-block rounded-full border border-line bg-card px-4 py-2 text-sm font-medium hover:border-primary hover:text-primary-700">{g.category}</a></li>
 						{/each}
 					</ul>
 				{/if}
@@ -192,7 +192,7 @@
 				{@render heading(s, 'center')}
 				<ul class="mx-auto flex max-w-4xl flex-wrap justify-center gap-3">
 					{#each data.amenities as a (a.id)}
-						<li class="inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2.5 text-sm font-medium"><Icon name={a.icon || 'check'} size={18} class="text-primary-700" /> {a.title}</li>
+						<li class="inline-flex items-center gap-2 rounded-full border border-line bg-card px-4 py-2.5 text-sm font-medium"><Icon name={a.icon || 'check'} size={18} class="text-primary-700" /> {a.title}</li>
 					{/each}
 				</ul>
 			</div>

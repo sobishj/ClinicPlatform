@@ -293,7 +293,7 @@
 						<div class="-mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:px-0">
 							{#each days.slice(0, 21) as d (d.ymd)}
 								{@const f = fmtDay(d.ymd)}
-								<label class="flex w-20 shrink-0 cursor-pointer snap-start flex-col items-center rounded-xl border border-line bg-white px-2 py-2.5 text-center has-[:checked]:border-primary has-[:checked]:bg-primary has-[:checked]:text-white">
+								<label class="flex w-20 shrink-0 cursor-pointer snap-start flex-col items-center rounded-xl border border-line bg-card px-2 py-2.5 text-center has-[:checked]:border-primary has-[:checked]:bg-primary has-[:checked]:text-white">
 									<input type="radio" name="_date" value={d.ymd} bind:group={date} class="sr-only" />
 									<span class="text-xs font-semibold uppercase">{relDay(d.ymd)}</span>
 									<span class="text-sm">{f.dm}</span>
@@ -322,7 +322,7 @@
 							{:else}
 								<div class="grid grid-cols-3 gap-2 sm:grid-cols-5">
 									{#each slots as s (s.start)}
-										<label class="cursor-pointer rounded-lg border border-line bg-white py-2 text-center text-sm font-medium has-[:checked]:border-primary has-[:checked]:bg-primary has-[:checked]:text-white">
+										<label class="cursor-pointer rounded-lg border border-line bg-card py-2 text-center text-sm font-medium has-[:checked]:border-primary has-[:checked]:bg-primary has-[:checked]:text-white">
 											<input type="radio" name="_slot" value={String(s.start)} bind:group={slot} class="sr-only" />{s.time}
 										</label>
 									{/each}

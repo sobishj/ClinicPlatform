@@ -31,11 +31,11 @@
 <a href="#admin-main" class="skip-link">Skip to content</a>
 
 {#if !data.user}
-	<main id="admin-main" class="flex min-h-dvh items-center justify-center bg-surface-2 px-4 py-10">
+	<main id="admin-main" class="flex min-h-dvh items-center justify-center bg-surface-2 px-4 py-10" style="--brand-card:#ffffff">
 		{@render children()}
 	</main>
 {:else}
-	<div class="min-h-dvh bg-gray-50 lg:flex">
+	<div class="min-h-dvh bg-gray-50 lg:flex" style="--brand-card:#ffffff">
 		<!-- Sidebar -->
 		<aside
 			class="fixed inset-y-0 left-0 z-40 w-72 -translate-x-full overflow-y-auto border-r border-line bg-white transition-transform lg:sticky lg:top-0 lg:h-dvh lg:translate-x-0 {menuOpen

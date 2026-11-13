@@ -11,6 +11,7 @@
 	--brand-secondary: #16216b;
 	--brand-accent: #ff7a59;
 	--brand-bg: #f4fbfb;
+	--brand-card: #ffffff;
 	--brand-font-heading: 'Fraunces';
 	--brand-font-body: 'DM Sans';
 	--brand-radius: 1rem;
@@ -38,6 +39,7 @@
 	--color-accent-700: color-mix(in oklab, var(--brand-accent) 55%, black);
 
 	--color-surface: var(--brand-bg);
+	--color-card: var(--brand-card);
 	/* Alternating sections are tinted with the primary colour for a fresher look. */
 	--color-surface-2: color-mix(in oklab, var(--brand-bg) 90%, var(--brand-primary));
 	--color-ink: color-mix(in oklab, var(--brand-secondary) 92%, black);
@@ -103,7 +105,7 @@
 	@apply text-lg leading-relaxed text-muted;
 }
 @utility card {
-	@apply rounded-brand border border-line bg-white;
+	@apply rounded-brand border border-line bg-card;
 }
 
 @utility btn {

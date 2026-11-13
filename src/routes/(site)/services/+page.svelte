@@ -14,7 +14,7 @@
 <PageHero title="Our {l.services.toLowerCase()}" eyebrow={data.site.clinic.name} intro="Every treatment starts with a conversation. We explain the options and costs, and you decide.">
 	{#if data.groups.length > 1}
 		<ul class="flex flex-wrap gap-2" aria-label="Jump to a category">
-			{#each data.groups as g (g.category)}<li><a href="#{slugify(g.category)}" class="inline-block rounded-full border border-line bg-white px-4 py-2 text-sm font-medium hover:border-primary">{g.category}</a></li>{/each}
+			{#each data.groups as g (g.category)}<li><a href="#{slugify(g.category)}" class="inline-block rounded-full border border-line bg-card px-4 py-2 text-sm font-medium hover:border-primary">{g.category}</a></li>{/each}
 		</ul>
 	{/if}
 </PageHero>
