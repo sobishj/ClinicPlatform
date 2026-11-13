@@ -17,7 +17,7 @@ enabled = true
 [[d1_databases]]
 binding = "DB"
 database_name = "clinic-db"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "bd745d43-c7e9-4378-ad39-cc29b959f80f"
 migrations_dir = "drizzle"
 
 # No R2 needed: uploaded images and PDFs are stored in D1 (table media_chunks)

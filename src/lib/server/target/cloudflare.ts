@@ -53,8 +53,11 @@ const defaultCache = () => (globalThis as unknown as { caches?: { default: Cache
 export async function cacheGet(_platform: App.Platform | undefined, key: string): Promise<Response | null> {
 	const cache = defaultCache();
 	if (!cache) return null;
-	const hit = await cache.match(new Request(CACHE_HOST + key));
-	return (hit as unknown as Response) ?? null;
+	const hit = (await cache.match(new Request(CACHE_HOST + key))) as unknown as Response | undefined;
+	if (!hit) return null;
+	// Responses from the Cache API have immutable headers; copy into a mutable Response
+	// so later code (security headers, nonce refresh) can still set headers.
+	return new Response(hit.body, { status: hit.status, statusText: hit.statusText, headers: new Headers(hit.headers) });
 }
 
 export async function cachePut(platform: App.Platform | undefined, key: string, response: Response, ttlSeconds: number) {
