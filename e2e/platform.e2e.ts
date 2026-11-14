@@ -91,11 +91,11 @@ test('console: add a client with a template and addresses, then manage it', asyn
 }) => {
 	await consoleLogin(page);
 	await page.getByRole('link', { name: 'Add client' }).first().click();
-	await page.getByLabel('Clinic name').fill('Smile Care Clinic');
-	await expect(page.getByLabel('Handle')).toHaveValue('smile-care-clinic');
-	await page.getByLabel('Handle').fill('smile');
+	await page.getByLabel('Clinic name', { exact: true }).fill('Smile Care Clinic');
+	await expect(page.getByLabel('Handle', { exact: true })).toHaveValue('smile-care-clinic');
+	await page.getByLabel('Handle', { exact: true }).fill('smile');
 	await page.getByRole('radio', { name: /Dental — Template 1/ }).check();
-	await page.getByLabel('Client URLs').fill('smile.localhost\nwww.smile.localhost');
+	await page.getByLabel('Client URLs', { exact: true }).fill('smile.localhost\nwww.smile.localhost');
 	await page.getByLabel('Name', { exact: true }).fill('Smile Admin');
 	await page.getByLabel('Email').fill('owner@smile.example');
 	await page.getByLabel('Password').fill('Smile-password-123');
@@ -134,14 +134,14 @@ test('console: suspend, change the main address, delete', async ({ page, request
 	await consoleLogin(page);
 	await page.getByRole('link', { name: 'Smile Care Clinic' }).click();
 
-	await page.getByLabel('Status').selectOption('suspended');
+	await page.getByLabel('Status', { exact: true }).selectOption('suspended');
 	await page.getByRole('button', { name: 'Save', exact: true }).click();
 	await expect(page.getByRole('status').filter({ hasText: 'Saved.' })).toBeVisible();
 	const suspended = await fetchAs(request, 'smile.localhost');
 	expect(suspended.status()).toBe(503);
 	expect(await suspended.text()).not.toContain('Smile');
 
-	await page.getByLabel('Status').selectOption('active');
+	await page.getByLabel('Status', { exact: true }).selectOption('active');
 	await page.getByRole('button', { name: 'Save', exact: true }).click();
 	await expect(page.getByRole('status').filter({ hasText: 'Saved.' })).toBeVisible();
 	expect(await status(request, 'smile.localhost', '/')).toBe(200);
@@ -157,7 +157,7 @@ test('console: suspend, change the main address, delete', async ({ page, request
 	expect(await status(request, 'smile.localhost', '/')).toBe(301);
 
 	await page.getByLabel('Type smile to confirm').fill('smile');
-	await page.getByRole('button', { name: 'Delete' }).click();
+	await page.getByRole('button', { name: 'Delete', exact: true }).click();
 	await expect(page).toHaveURL(/\/console$/);
 	await expect(page.getByRole('link', { name: 'Smile Care Clinic' })).toHaveCount(0);
 	expect(await status(request, 'www.smile.localhost', '/')).toBe(404);

@@ -8,9 +8,8 @@
 #                 a slot:  npx wrangler d1 create clinic-tenant-3  → add a block below → deploy.
 #   Tables are created automatically on first use (migrations are bundled into the Worker).
 #
-# The database_id values below are placeholders that work for local development
-# (`wrangler dev` keeps local D1 data in .wrangler/). Before the first deploy, create the
-# databases (npx wrangler d1 create …) and paste their real ids here.
+# The database_id values below are the live databases on Cloudflare (created with
+# npx wrangler d1 create …). `wrangler dev` keeps its own local copies in .wrangler/.
 #
 # Free plan: 10 D1 databases per account (platform + up to 9 clients).
 name = "clinic-platform"
@@ -28,22 +27,22 @@ enabled = true
 [[d1_databases]]
 binding = "PLATFORM_DB"
 database_name = "clinic-platform"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "3e1621a2-0205-41e7-b1e1-cfd3470bb31d"
 
 [[d1_databases]]
 binding = "TENANT_1"
 database_name = "clinic-tenant-1"
-database_id = "00000000-0000-0000-0000-000000000001"
+database_id = "946835d3-825a-43eb-8ca3-7e1545e7bf94"
 
 [[d1_databases]]
 binding = "TENANT_2"
 database_name = "clinic-tenant-2"
-database_id = "00000000-0000-0000-0000-000000000002"
+database_id = "e8360ed2-45f4-4e7a-a340-b5006e2f065d"
 
 [[d1_databases]]
 binding = "TENANT_3"
 database_name = "clinic-tenant-3"
-database_id = "00000000-0000-0000-0000-000000000003"
+database_id = "ee533b3e-eef4-4b4f-9fd5-ec9ed44f8758"
 
 # No R2 needed: uploaded images and PDFs are stored in each client's own D1 database
 # (table media_chunks) and served from /media on the client's own domain.
@@ -53,6 +52,6 @@ database_id = "00000000-0000-0000-0000-000000000003"
 
 [vars]
 EMAIL_PROVIDER = "none"
-PLATFORM_ADMIN_HOST = "console.localhost"
+PLATFORM_ADMIN_HOST = "clinic-platform.onehook.workers.dev"
 # Secrets: set with `npx wrangler secret put NAME`
 #   RESEND_API_KEY, TURNSTILE_SECRET_KEY, CRON_SECRET, SETUP_TOKEN

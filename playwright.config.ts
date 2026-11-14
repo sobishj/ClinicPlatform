@@ -35,7 +35,7 @@ export default defineConfig({
 		{ name: 'setup', testMatch: /auth.setup.ts/ },
 		{
 			name: 'public',
-			testMatch: /(booking|a11y|platform).e2e.ts/,
+			testMatch: /(booking|a11y|platform|console-help).e2e.ts/,
 			use: { ...devices['Desktop Chrome'] }
 		},
 		{

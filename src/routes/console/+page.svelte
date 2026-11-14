@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import Tip from '#lib/console/Tip.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -11,7 +12,10 @@
 
 <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
 	<div>
-		<h1 class="font-sans text-2xl font-semibold">Clients</h1>
+		<div class="flex items-center gap-1.5">
+			<h1 class="font-sans text-2xl font-semibold">Clients</h1>
+			<Tip key="clients" small={false} />
+		</div>
 		<p class="text-sm text-muted">
 			Every client has its own website, database, admin logins and bookings.
 		</p>
@@ -25,7 +29,7 @@
 			? 'bg-amber-50 text-amber-900'
 			: 'bg-white text-muted'}"
 	>
-		Database slots in use: <strong>{data.slots.used} of {data.slots.total}</strong>.
+		Database slots in use: <strong>{data.slots.used} of {data.slots.total}</strong>. <Tip key="slots" />
 		{#if data.slots.used >= data.slots.total}Add another <code>TENANT_*</code> D1 binding in wrangler.toml
 			and redeploy before adding a client.{/if}
 	</p>

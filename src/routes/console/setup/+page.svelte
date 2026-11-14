@@ -1,11 +1,15 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
+	import Tip from '#lib/console/Tip.svelte';
 	let { data, form }: PageProps = $props();
 </script>
 
 <div class="mx-auto w-full max-w-md py-16">
 	<div class="mb-6 text-center">
-		<h1 class="font-sans text-2xl font-semibold">Welcome</h1>
+		<div class="flex items-center justify-center gap-1.5">
+			<h1 class="font-sans text-2xl font-semibold">Welcome</h1>
+			<Tip key="setup" small={false} />
+		</div>
 		<p class="text-sm text-muted">Create the first console account. It can add and manage every client site.</p>
 	</div>
 	<form method="POST" class="card space-y-4 p-6 shadow-sm">
@@ -25,9 +29,12 @@
 		</div>
 		{#if data.needsToken}
 			<div>
-				<label for="token" class="label">Setup token</label>
+				<div class="mb-1.5 flex items-center gap-1">
+					<label for="token" class="text-sm font-medium text-ink">Setup token</label>
+					<Tip key="setupToken" />
+				</div>
 				<input id="token" name="token" required class="input" aria-describedby="tok-hint" />
-				<p id="tok-hint" class="hint">The value of the SETUP_TOKEN environment variable.</p>
+				<p id="tok-hint" class="hint">The one-time token you were given when the platform was deployed.</p>
 			</div>
 		{/if}
 		<button class="btn-primary w-full">Create account</button>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
+	import Tip from '#lib/console/Tip.svelte';
 	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
@@ -37,7 +38,10 @@
 <a href="/console" class="text-sm text-muted hover:text-ink">← Clients</a>
 <div class="mt-2 mb-6 flex flex-wrap items-start justify-between gap-4">
 	<div>
-		<h1 class="font-sans text-2xl font-semibold">{c.name}</h1>
+		<div class="flex items-center gap-1.5">
+			<h1 class="font-sans text-2xl font-semibold">{c.name}</h1>
+			<Tip key="client" small={false} />
+		</div>
 		<p class="text-sm text-muted">
 			{c.slug} · {c.templateName} ·
 			<span class={c.status === 'active' ? 'text-green-700' : 'text-gray-600'}
@@ -91,7 +95,10 @@
 <div class="grid gap-6 lg:grid-cols-2">
 	<!-- Web addresses -->
 	<section class="space-y-4 card p-6 lg:col-span-2">
-		<h2 class="font-sans text-lg font-semibold">Web addresses</h2>
+		<div class="flex items-center gap-1">
+			<h2 class="font-sans text-lg font-semibold">Web addresses</h2>
+			<Tip key="webAddresses" />
+		</div>
 		{@render notice('domains')}
 		{#if data.domains.length}
 			<ul class="divide-y divide-line rounded-lg border border-line">
@@ -144,9 +151,12 @@
 					placeholder="www.clinic.com"
 				/>
 			</div>
-			<label class="flex items-center gap-2 pb-2 text-sm"
-				><input type="checkbox" name="primary" /> Make main address</label
-			>
+			<div class="flex items-center gap-1 pb-2">
+				<label class="flex items-center gap-2 text-sm"
+					><input type="checkbox" name="primary" /> Make main address</label
+				>
+				<Tip key="mainAddress" align="right" />
+			</div>
 			<button class="btn-outline">Add</button>
 		</form>
 		<p class="hint">
@@ -158,7 +168,10 @@
 
 	<!-- Details -->
 	<section class="card p-6">
-		<h2 class="mb-4 font-sans text-lg font-semibold">Details</h2>
+		<div class="mb-4 flex items-center gap-1">
+			<h2 class="font-sans text-lg font-semibold">Details</h2>
+			<Tip key="details" />
+		</div>
 		<form
 			method="POST"
 			action="?/details"
@@ -169,14 +182,20 @@
 		>
 			{@render notice('details')}
 			<div>
-				<label for="name" class="label">Clinic name</label>
+				<div class="mb-1.5 flex items-center gap-1">
+					<label for="name" class="text-sm font-medium text-ink">Clinic name</label>
+					<Tip key="clinicName" />
+				</div>
 				<input id="name" name="name" required class="input" value={c.name} />
 				<p class="hint">
 					For the console. The name on the website is edited in the client’s admin.
 				</p>
 			</div>
 			<div>
-				<label for="templateKey" class="label">Template</label>
+				<div class="mb-1.5 flex items-center gap-1">
+					<label for="templateKey" class="text-sm font-medium text-ink">Template</label>
+					<Tip key="templateEdit" />
+				</div>
 				<select id="templateKey" name="templateKey" class="input">
 					{#each data.categories as cat (cat.key)}
 						<optgroup label={cat.name}>
@@ -190,7 +209,10 @@
 				<p class="hint">Changing the template keeps all of the client’s content.</p>
 			</div>
 			<div>
-				<label for="status" class="label">Status</label>
+				<div class="mb-1.5 flex items-center gap-1">
+					<label for="status" class="text-sm font-medium text-ink">Status</label>
+					<Tip key="status" />
+				</div>
 				<select id="status" name="status" class="input">
 					<option value="active" selected={c.status === 'active'}>Live</option>
 					<option value="suspended" selected={c.status === 'suspended'}
@@ -199,7 +221,10 @@
 				</select>
 			</div>
 			<div>
-				<label for="notes" class="label">Notes</label>
+				<div class="mb-1.5 flex items-center gap-1">
+					<label for="notes" class="text-sm font-medium text-ink">Notes</label>
+					<Tip key="notes" />
+				</div>
 				<textarea id="notes" name="notes" rows="3" class="input">{c.notes ?? ''}</textarea>
 			</div>
 			<button class="btn-primary">Save</button>
@@ -208,7 +233,10 @@
 
 	<!-- Logins -->
 	<section class="space-y-4 card p-6">
-		<h2 class="font-sans text-lg font-semibold">Client logins</h2>
+		<div class="flex items-center gap-1">
+			<h2 class="font-sans text-lg font-semibold">Client logins</h2>
+			<Tip key="logins" />
+		</div>
 		<p class="text-sm text-muted">
 			They sign in at {primary ? siteUrl(primary.hostname, '/admin') : 'their-address/admin'}.
 		</p>
@@ -261,7 +289,10 @@
 
 	<!-- Activity -->
 	<section class="card p-6">
-		<h2 class="mb-3 font-sans text-lg font-semibold">Console activity</h2>
+		<div class="mb-3 flex items-center gap-1">
+			<h2 class="font-sans text-lg font-semibold">Console activity</h2>
+			<Tip key="activity" />
+		</div>
 		{#if data.log.length}
 			<ul class="space-y-1 text-sm">
 				{#each data.log as l (l.id)}
@@ -278,7 +309,10 @@
 
 	<!-- Delete -->
 	<section class="space-y-3 card border-red-200 p-6">
-		<h2 class="font-sans text-lg font-semibold text-red-800">Delete client</h2>
+		<div class="flex items-center gap-1">
+			<h2 class="font-sans text-lg font-semibold text-red-800">Delete client</h2>
+			<Tip key="deleteClient" />
+		</div>
 		<p class="text-sm text-muted">
 			Removes the client, its addresses and logins. On a server, its database and files are moved to <code
 				>data/tenants/_deleted/</code

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { slugify } from '#lib/slug.js';
+	import Tip from '#lib/console/Tip.svelte';
 	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
@@ -17,7 +18,10 @@
 
 <div class="mx-auto max-w-2xl">
 	<a href="/console" class="text-sm text-muted hover:text-ink">← Clients</a>
-	<h1 class="mt-2 mb-1 font-sans text-2xl font-semibold">Add client</h1>
+	<div class="mt-2 mb-1 flex items-center gap-1.5">
+		<h1 class="font-sans text-2xl font-semibold">Add client</h1>
+		<Tip key="newClient" small={false} />
+	</div>
 	<p class="mb-6 text-sm text-muted">
 		Creates the client’s own database, fills it with the template’s sample content (all editable in
 		their admin), and connects their web addresses.
@@ -41,7 +45,10 @@
 		<section class="space-y-4 card p-6">
 			<h2 class="font-sans text-lg font-semibold">Client</h2>
 			<div>
-				<label for="name" class="label">Clinic name</label>
+				<div class="mb-1.5 flex items-center gap-1">
+					<label for="name" class="text-sm font-medium text-ink">Clinic name</label>
+					<Tip key="clinicNameNew" />
+				</div>
 				<input
 					id="name"
 					name="name"
@@ -54,7 +61,10 @@
 				{#if err('name')}<p class="field-error">{err('name')}</p>{/if}
 			</div>
 			<div>
-				<label for="slug" class="label">Handle</label>
+				<div class="mb-1.5 flex items-center gap-1">
+					<label for="slug" class="text-sm font-medium text-ink">Handle</label>
+					<Tip key="handle" />
+				</div>
 				<input
 					id="slug"
 					name="slug"
@@ -72,7 +82,10 @@
 		</section>
 
 		<section class="space-y-4 card p-6">
+			<div class="flex items-center gap-1">
 			<h2 class="font-sans text-lg font-semibold">Template</h2>
+			<Tip key="template" />
+		</div>
 			<fieldset class="space-y-3">
 				<legend class="sr-only">Template</legend>
 				{#each data.categories as cat (cat.key)}
@@ -102,7 +115,10 @@
 		<section class="space-y-4 card p-6">
 			<h2 class="font-sans text-lg font-semibold">Web addresses</h2>
 			<div>
-				<label for="domains" class="label">Client URLs</label>
+				<div class="mb-1.5 flex items-center gap-1">
+					<label for="domains" class="text-sm font-medium text-ink">Client URLs</label>
+					<Tip key="clientUrls" />
+				</div>
 				<textarea
 					id="domains"
 					name="domains"
@@ -123,9 +139,12 @@
 		</section>
 
 		<section class="space-y-4 card p-6">
-			<h2 class="font-sans text-lg font-semibold">
-				Client admin login <span class="text-sm font-normal text-muted">(optional)</span>
-			</h2>
+			<div class="flex items-center gap-1">
+				<h2 class="font-sans text-lg font-semibold">
+					Client admin login <span class="text-sm font-normal text-muted">(optional)</span>
+				</h2>
+				<Tip key="adminLogin" />
+			</div>
 			<p class="text-sm text-muted">
 				The client signs in at <code>their-address/admin</code> to edit their site and see bookings.
 			</p>
@@ -175,7 +194,10 @@
 
 		{#if data.slots}
 			<section class="space-y-4 card p-6">
-				<h2 class="font-sans text-lg font-semibold">Database slot</h2>
+				<div class="flex items-center gap-1">
+			<h2 class="font-sans text-lg font-semibold">Database slot</h2>
+			<Tip key="slot" />
+		</div>
 				{#if data.slots.length}
 					<div>
 						<label for="slot" class="label">D1 binding</label>
@@ -198,10 +220,13 @@
 			</section>
 		{/if}
 
-		<label class="flex items-center gap-2 text-sm"
-			><input type="checkbox" name="demoAppointments" /> Add a few demo appointment requests (for showing
-			the bookings screen)</label
-		>
+		<div class="flex items-center gap-1">
+			<label class="flex items-center gap-2 text-sm"
+				><input type="checkbox" name="demoAppointments" /> Add a few demo appointment requests (for showing
+				the bookings screen)</label
+			>
+			<Tip key="demoAppointments" />
+		</div>
 
 		<div class="flex gap-3">
 			<button class="btn-primary" disabled={submitting}
