@@ -244,7 +244,7 @@
 				<legend class="sr-only">{stepTitles.location}</legend>
 				<div class="grid gap-3 sm:grid-cols-2">
 					{#each locationChoices as loc (loc.id)}
-						<label class="card flex cursor-pointer gap-4 p-4 transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+						<label class="card flex cursor-pointer transition-[border-color,box-shadow,background-color] hover:border-primary/60 hover:shadow-sm gap-4 p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
 							<input type="radio" name="_loc" value={loc.id} bind:group={locationId} class="mt-1 text-primary" onchange={() => setTimeout(next, 150)} />
 							<span class="min-w-0">
 								<span class="block font-heading text-lg">{loc.name} <span class="ml-1 align-middle text-xs font-sans font-semibold text-primary-800">{loc.type}</span></span>
@@ -263,13 +263,13 @@
 				<legend class="sr-only">{stepTitles.doctor}</legend>
 				<p class="mb-4 text-sm text-muted">Optional — choose “No preference” and we will find the right person for you.</p>
 				<div class="grid gap-3 sm:grid-cols-2">
-					<label class="card flex cursor-pointer items-center gap-4 p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+					<label class="card flex cursor-pointer transition-[border-color,box-shadow] hover:border-primary/60 hover:shadow-sm items-center gap-4 p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
 						<input type="radio" name="_doc" value="" bind:group={doctorId} class="text-primary" />
 						<span class="flex size-12 items-center justify-center rounded-full bg-primary-100 text-primary-800"><Icon name="users" /></span>
 						<span><span class="block font-semibold">No preference</span><span class="text-sm text-muted">First available {l.doctor.toLowerCase()}</span></span>
 					</label>
 					{#each doctorsHere as d (d.id)}
-						<label class="card flex cursor-pointer items-center gap-4 p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+						<label class="card flex cursor-pointer transition-[border-color,box-shadow] hover:border-primary/60 hover:shadow-sm items-center gap-4 p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
 							<input type="radio" name="_doc" value={d.id} bind:group={doctorId} class="text-primary" />
 							{#if d.photo}<img src={d.photo.url} alt="" width="48" height="48" class="size-12 rounded-full object-cover" />{/if}
 							<span class="min-w-0"><span class="block font-semibold">{doctorName(d)}</span><span class="block truncate text-sm text-muted">{d.specialities.slice(0, 2).join(' · ')}</span></span>
@@ -335,7 +335,7 @@
 							<legend class="label">Time of day on {fmtDay(day.ymd).long}</legend>
 							<div class="grid gap-2 sm:grid-cols-3">
 								{#each day.windows as w (w)}
-									<label class="card flex cursor-pointer items-center gap-3 p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+									<label class="card flex cursor-pointer transition-[border-color,box-shadow] hover:border-primary/60 hover:shadow-sm items-center gap-3 p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
 										<input type="radio" name="_win" value={w} bind:group={timeWindow} class="text-primary" />
 										<span><span class="block font-semibold">{TIME_WINDOWS[w].label}</span><span class="text-sm text-muted">{windowHint[w]}</span></span>
 									</label>

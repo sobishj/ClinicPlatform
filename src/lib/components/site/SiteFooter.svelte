@@ -35,8 +35,8 @@
 	<div class="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12">
 		<div class="lg:col-span-4">
 			<a href="/" class="inline-flex items-center gap-2.5">
-				{#if logo?.url}<img src={logo.url} alt="" class="h-10 w-auto max-w-40 object-contain {site.clinic.logoDark ? '' : 'rounded-lg bg-white p-1'}" loading="lazy" />{/if}
-				<span class="font-heading text-xl font-semibold text-white">{site.clinic.name}</span>
+				{#if logo?.url}<img src={logo.url} alt="" class="brand-logo {site.clinic.logoDark ? '' : 'rounded-lg bg-white p-1'}" loading="lazy" />{/if}
+				<span class="brand-name font-semibold text-white">{site.clinic.name}</span>
 			</a>
 			{#if site.clinic.tagline}<p class="mt-3 max-w-xs">{site.clinic.tagline}</p>{/if}
 			<SocialLinks social={site.clinic.social} size={24} class="mt-4 -ml-1" />
@@ -45,7 +45,7 @@
 		<nav class="lg:col-span-2" aria-label="Footer">
 			<h2 class="mb-3 font-sans text-sm font-semibold tracking-wider text-white uppercase">Explore</h2>
 			<ul class="space-y-2 text-sm">
-				{#each quick as q (q.href)}<li><a href={q.href} class="hover:text-white hover:underline">{q.label}</a></li>{/each}
+				{#each quick as q (q.href)}<li><a href={q.href} class="link-nudge inline-block hover:text-white">{q.label}</a></li>{/each}
 			</ul>
 		</nav>
 
@@ -53,7 +53,7 @@
 			<div class="lg:col-span-2">
 				<h2 class="mb-3 font-sans text-sm font-semibold tracking-wider text-white uppercase">{l.services}</h2>
 				<ul class="space-y-2 text-sm">
-					{#each nav.services.slice(0, 8) as s (s.slug)}<li><a href="/services/{s.slug}" class="hover:text-white hover:underline">{s.name}</a></li>{/each}
+					{#each nav.services.slice(0, 8) as s (s.slug)}<li><a href="/services/{s.slug}" class="link-nudge inline-block hover:text-white">{s.name}</a></li>{/each}
 				</ul>
 			</div>
 		{/if}

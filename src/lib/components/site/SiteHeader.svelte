@@ -64,11 +64,11 @@
 
 <header class="sticky top-0 z-40 border-b bg-surface/95 backdrop-blur transition-shadow {scrolled ? 'border-line shadow-sm' : 'border-transparent'}">
 	<div class="container-page flex h-16 items-center gap-4 lg:h-20">
-		<a href="/" class="flex min-w-0 items-center gap-2.5" aria-label="{site.clinic.name} — home">
+		<a href="/" class="group flex min-w-0 items-center gap-2.5" aria-label="{site.clinic.name} — home">
 			{#if logo?.url}
-				<img src={logo.url} alt="" width={logo.width ?? 40} height={logo.height ?? 40} class="h-9 w-auto max-w-40 object-contain lg:h-11" />
+				<img src={logo.url} alt="" width={logo.width ?? 40} height={logo.height ?? 40} class="brand-logo transition-transform duration-300 group-hover:scale-105" />
 			{/if}
-			<span class="truncate font-heading text-lg font-semibold text-ink lg:text-xl">{site.clinic.shortName || site.clinic.name}</span>
+			<span class="brand-name line-clamp-2 font-semibold text-ink">{site.clinic.shortName || site.clinic.name}</span>
 		</a>
 
 		<nav class="ml-auto hidden lg:block" aria-label="Main">
@@ -83,20 +83,20 @@
 											<p class="mb-1 px-2 text-xs font-semibold tracking-wider text-muted uppercase">{cat}</p>
 											<ul>
 												{#each items as s (s.slug)}
-													<li><a href="/services/{s.slug}" class="block rounded-lg px-2 py-1.5 text-sm hover:bg-primary-50 hover:text-primary-800">{s.name}</a></li>
+													<li><a href="/services/{s.slug}" class="link-nudge block rounded-lg px-2 py-1.5 text-sm hover:bg-primary-50 hover:text-primary-800">{s.name}</a></li>
 												{/each}
 											</ul>
 										</div>
 									{/each}
 								</div>
-								<a href="/services" class="mt-3 block rounded-lg bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-800">All {l.services.toLowerCase()} →</a>
+								<a href="/services" class="link-nudge mt-3 block rounded-lg bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-800 hover:bg-primary-100">All {l.services.toLowerCase()} →</a>
 							</NavDropdown>
 						{:else if link.dropdown === 'locations' && nav.locations.length}
 							<NavDropdown label={link.label} href={link.href} active={is(link.href)}>
 								<ul>
 									{#each nav.locations as loc (loc.slug)}
 										<li>
-											<a href="/locations/{loc.slug}" class="block rounded-lg px-2 py-2 hover:bg-primary-50">
+											<a href="/locations/{loc.slug}" class="link-nudge block rounded-lg px-2 py-2 hover:bg-primary-50">
 												<span class="block text-sm font-medium">{loc.name}</span>
 												<span class="block text-xs text-muted">{loc.type} · {loc.city}</span>
 											</a>
@@ -105,7 +105,7 @@
 								</ul>
 							</NavDropdown>
 						{:else}
-							<a href={link.href} class="block rounded-full px-3 py-2 text-[15px] font-medium hover:text-primary-700 {is(link.href) ? 'text-primary-700' : ''}" aria-current={is(link.href) ? 'page' : undefined}>{link.label}</a>
+							<a href={link.href} class="nav-link block rounded-full px-3 py-2 text-[15px] font-medium hover:text-primary-700 {is(link.href) ? 'text-primary-700' : ''}" aria-current={is(link.href) ? 'page' : undefined}>{link.label}</a>
 						{/if}
 					</li>
 				{/each}

@@ -79,6 +79,9 @@ export const clinicSchema = z.object({
 	country: str('IN')
 });
 
+export const SIZE_STEPS = ['sm', 'md', 'lg', 'xl'] as const;
+export type SizeStep = (typeof SIZE_STEPS)[number];
+
 export const themeSchema = z.object({
 	primary: color('#0a7d8c'),
 	secondary: color('#16216b'),
@@ -88,7 +91,13 @@ export const themeSchema = z.object({
 	card: color('#ffffff'),
 	headingFont: z.string().default('Fraunces'),
 	bodyFont: z.string().default('DM Sans'),
-	radius: z.enum(['square', 'soft', 'round']).default('soft')
+	radius: z.enum(['square', 'soft', 'round']).default('soft'),
+	/** Font for the clinic name in the header/footer; empty = same as the heading font. */
+	nameFont: z.string().default(''),
+	nameSize: z.enum(SIZE_STEPS).default('md'),
+	logoSize: z.enum(SIZE_STEPS).default('md'),
+	/** Overall text size of the public website. */
+	textSize: z.enum(SIZE_STEPS).default('md')
 });
 
 export const labelsSchema = z.object({

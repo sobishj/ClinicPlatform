@@ -16,6 +16,9 @@
 	--brand-font-body: 'DM Sans';
 	--brand-radius: 1rem;
 	--mobile-bar-height: 0px;
+	--brand-font-name: var(--brand-font-heading), ui-serif, Georgia, serif;
+	--brand-name-size: 1.25rem;
+	--brand-logo-h: 2.75rem;
 }
 
 @theme inline {
@@ -89,6 +92,25 @@
 	}
 }
 
+/* Clinic name and logo in the header/footer: font and sizes come from the branding settings. */
+@utility brand-name {
+	font-family: var(--brand-font-name);
+	font-size: calc(var(--brand-name-size) * 0.9);
+	line-height: 1.2;
+	@media (width >= 64rem) {
+		font-size: var(--brand-name-size);
+	}
+}
+@utility brand-logo {
+	height: calc(var(--brand-logo-h) * 0.82);
+	width: auto;
+	max-width: calc(var(--brand-logo-h) * 4);
+	object-fit: contain;
+	@media (width >= 64rem) {
+		height: var(--brand-logo-h);
+	}
+}
+
 @utility container-page {
 	@apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
 }
@@ -109,7 +131,17 @@
 }
 
 @utility btn {
-	@apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60;
+	@apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-200 disabled:cursor-not-allowed disabled:opacity-60;
+	@media (hover: hover) {
+		&:not(:disabled):hover {
+			transform: translateY(-1px);
+			box-shadow: 0 6px 16px -8px color-mix(in oklab, var(--brand-secondary) 45%, transparent);
+		}
+	}
+	&:not(:disabled):active {
+		transform: translateY(0) scale(0.97);
+		box-shadow: none;
+	}
 }
 @utility btn-primary {
 	@apply btn bg-primary text-white hover:bg-primary-700;
@@ -160,4 +192,108 @@
 @utility cv-auto {
 	content-visibility: auto;
 	contain-intrinsic-size: auto 900px;
+}
+
+/*
+ * Hover micro-interactions (public site). Hover styles only apply on devices that can hover,
+ * and the reduced-motion rule in the base layer neutralises the movement.
+ */
+@utility card-lift {
+	transition:
+		transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
+		box-shadow 0.3s ease,
+		border-color 0.3s ease;
+	@media (hover: hover) {
+		&:hover {
+			transform: translateY(-4px) scale(1.015);
+			border-color: color-mix(in oklab, var(--brand-primary) 55%, transparent);
+			box-shadow:
+				0 0 0 1px color-mix(in oklab, var(--brand-primary) 35%, transparent),
+				0 18px 36px -16px color-mix(in oklab, var(--brand-secondary) 40%, transparent);
+		}
+	}
+	&:focus-visible,
+	&:has(a:focus-visible) {
+		border-color: color-mix(in oklab, var(--brand-primary) 55%, transparent);
+	}
+}
+/* For tiles inside a shared panel (e.g. "What brings you in?"): pops out of the grid. */
+@utility tile-lift {
+	position: relative;
+	border-radius: var(--brand-radius);
+	transition:
+		transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
+		box-shadow 0.3s ease,
+		background-color 0.3s ease;
+	@media (hover: hover) {
+		&:hover {
+			z-index: 10;
+			transform: scale(1.03);
+			background-color: var(--brand-card);
+			border-color: transparent;
+			box-shadow:
+				0 0 0 2px color-mix(in oklab, var(--brand-primary) 45%, transparent),
+				0 20px 40px -18px color-mix(in oklab, var(--brand-secondary) 45%, transparent);
+		}
+	}
+}
+/* Small pills/chips: gentle rise. */
+@utility chip-lift {
+	transition:
+		transform 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease,
+		box-shadow 0.2s ease;
+	@media (hover: hover) {
+		&:hover {
+			transform: translateY(-2px);
+			border-color: var(--brand-primary);
+			box-shadow: 0 6px 14px -8px color-mix(in oklab, var(--brand-primary) 60%, transparent);
+		}
+	}
+}
+/* Icon badge that pops when its .group parent is hovered. */
+@utility icon-pop {
+	transition:
+		transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+		background-color 0.25s ease,
+		color 0.25s ease;
+	@media (hover: hover) {
+		:where(.group):hover & {
+			transform: scale(1.1) rotate(-6deg);
+		}
+	}
+}
+/* Top navigation: underline grows from the centre on hover, stays on the current page. */
+@utility nav-link {
+	position: relative;
+	transition: color 0.2s ease;
+	&::after {
+		content: '';
+		position: absolute;
+		left: 0.75rem;
+		right: 0.75rem;
+		bottom: 0.25rem;
+		height: 2px;
+		border-radius: 2px;
+		background: var(--brand-primary);
+		transform: scaleX(0);
+		transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1);
+	}
+	&:hover::after,
+	&[aria-current='page']::after {
+		transform: scaleX(1);
+	}
+}
+/* Lists of links (dropdowns, footer): nudge right on hover. */
+@utility link-nudge {
+	transition:
+		transform 0.2s ease,
+		color 0.2s ease,
+		background-color 0.2s ease;
+	@media (hover: hover) {
+		&:hover {
+			transform: translateX(3px);
+		}
+	}
 }

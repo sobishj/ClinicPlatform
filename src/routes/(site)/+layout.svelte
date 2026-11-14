@@ -5,13 +5,21 @@
 	import NoticeBanner from '#lib/components/site/NoticeBanner.svelte';
 	import Analytics from '#lib/components/site/Analytics.svelte';
 	import ChatWidget from '#lib/components/site/ChatWidget.svelte';
+	import { textScale } from '#lib/theme.js';
 	import type { LayoutProps } from './$types';
 
 	let { data, children }: LayoutProps = $props();
 	const site = $derived(data.site);
 	const phone = $derived(site.clinic.phones[0] ?? data.nav.locations[0]?.phones[0]);
+	// Value comes from a fixed map in textScale(), so it is safe to inline.
+	const textCss = $derived(`<style>html{font-size:${textScale(site.theme)}}</style>`);
 	const whatsapp = $derived(site.clinic.whatsapp || data.nav.locations[0]?.whatsapp || undefined);
 </script>
+
+<svelte:head>
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	{@html textCss}
+</svelte:head>
 
 <a href="#main" class="skip-link">Skip to content</a>
 

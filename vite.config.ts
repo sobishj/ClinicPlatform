@@ -11,6 +11,13 @@ import { fileURLToPath } from 'node:url';
  *  - cloudflare:     adapter-cloudflare, D1 (data + uploaded files; no R2 needed)
  * Feature code never imports a driver directly; it goes through #lib/server/platform.
  */
+// On Windows, a lower-case drive letter in the working directory (e.g. `c:\` from VS Code's terminal)
+// makes Vite load some modules under both `c:` and `C:`. SvelteKit's internals then get bundled
+// twice and `redirect()`/`error()` from routes stop being recognised (they surface as 500s).
+if (process.platform === 'win32' && /^[a-z]:/.test(process.cwd())) {
+	process.chdir(process.cwd()[0].toUpperCase() + process.cwd().slice(1));
+}
+
 const target = process.env.DEPLOY_TARGET === 'cloudflare' ? 'cloudflare' : 'node';
 const targetModule = fileURLToPath(new URL(`./src/lib/server/target/${target}.ts`, import.meta.url));
 

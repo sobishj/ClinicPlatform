@@ -13,8 +13,8 @@
 <div class="container-page py-12">
 	<ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 		{#each data.posts as p (p.slug)}
-			<li class="card overflow-hidden">
-				{#if p.coverImage}<img src={p.coverImage.url} alt="" width="1200" height="800" loading="lazy" class="aspect-[3/2] w-full object-cover" />{/if}
+			<li class="group card card-lift overflow-hidden">
+				{#if p.coverImage}<img src={p.coverImage.url} alt="" width="1200" height="800" loading="lazy" class="aspect-[3/2] w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />{/if}
 				<div class="p-5">
 					<p class="text-sm text-muted"><time datetime={p.publishedAt ? new Date(p.publishedAt).toISOString() : undefined}>{fmt(p.publishedAt)}</time></p>
 					<h2 class="mt-1 font-heading text-xl"><a href="/blog/{p.slug}" class="hover:text-primary-700">{p.title}</a></h2>

@@ -84,6 +84,27 @@ test.describe('admin content management', () => {
 		await expect(page.getByRole('heading', { name: 'Vyttila', level: 3 })).toBeVisible();
 	});
 
+	test('edits an existing content block', async ({ page }) => {
+		await page.goto('/admin/content/intents');
+		const rows = page.locator('[data-sortable] > li');
+		const original = (await rows.first().locator('button').first().innerText()).trim();
+		await rows.first().getByRole('button', { name: original, exact: true }).click();
+
+		const dialog = page.getByRole('dialog', { name: 'Edit intent card' });
+		await expect(dialog.getByRole('textbox', { name: 'Title' })).toHaveValue(original);
+		await dialog.getByRole('textbox', { name: 'Title' }).fill('E2E Intent');
+		await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+		await expectToast(page, 'Saved');
+		await expect(rows.first()).toContainText('E2E Intent');
+
+		// Put the original title back.
+		await rows.first().getByRole('button', { name: 'E2E Intent', exact: true }).click();
+		await dialog.getByRole('textbox', { name: 'Title' }).fill(original);
+		await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+		await expectToast(page, 'Saved');
+		await expect(rows.first()).toContainText(original);
+	});
+
 	test.afterAll(() => {
 		withDb((db) => {
 			db.prepare("DELETE FROM slides WHERE heading = 'E2E Slide'").run();

@@ -5,8 +5,8 @@
 	import SelectField from '#lib/admin/SelectField.svelte';
 	import ImageField from '#lib/admin/ImageField.svelte';
 	import ListEditor from '#lib/admin/ListEditor.svelte';
-	import { FONT_CHOICES } from '#lib/settings/schema.js';
-	import { themeCss, googleFontsUrl } from '#lib/theme.js';
+	import { FONT_CHOICES, SIZE_STEPS } from '#lib/settings/schema.js';
+	import { themeCss, googleFontsUrl, textScale, SIZE_LABELS } from '#lib/theme.js';
 	import { THEME_PRESETS, matchingPreset, type ThemePreset } from '#lib/theme-presets.js';
 	import { checkTheme } from '#lib/contrast.js';
 	import Icon from '#lib/components/Icon.svelte';
@@ -21,6 +21,8 @@
 
 	const timeZones = typeof Intl.supportedValuesOf === 'function' ? Intl.supportedValuesOf('timeZone') : ['Asia/Kolkata', 'UTC'];
 	const fontOptions = [...FONT_CHOICES];
+	const nameFontOptions = [{ value: '', label: 'Same as heading font' }, ...FONT_CHOICES.map((f) => ({ value: f, label: f }))];
+	const sizeOptions = SIZE_STEPS.map((s) => ({ value: s, label: SIZE_LABELS[s] }));
 	const previewStyle = $derived(themeCss(theme));
 
 	// Colour themes
@@ -162,6 +164,9 @@
 				<h2 class="font-sans text-lg font-semibold">Logo & icon</h2>
 				<ImageField label="Logo" bind:value={clinic.logo} maxWidth={600} previewClass="aspect-[3/1] object-contain" hint="PNG or WebP with a transparent background works best." />
 				<ImageField label="Logo for dark backgrounds" bind:value={clinic.logoDark} maxWidth={600} previewClass="aspect-[3/1] bg-gray-800" hint="Optional — used in the footer." />
+				<div class="max-w-xs">
+					<SelectField label="Logo size" bind:value={theme.logoSize} options={sizeOptions} hint="How big the logo appears in the website header and footer." />
+				</div>
 				<ImageField label="Favicon" bind:value={clinic.favicon} maxWidth={256} aspect={1} previewClass="aspect-square" hint="Square image, at least 64×64." />
 			</section>
 
@@ -169,7 +174,10 @@
 				<h2 class="font-sans text-lg font-semibold">Fonts & style</h2>
 				<div class="grid gap-4 sm:grid-cols-2">
 					<SelectField label="Heading font" bind:value={theme.headingFont} options={fontOptions} />
-					<SelectField label="Body font" bind:value={theme.bodyFont} options={fontOptions} />
+					<SelectField label="Body font" bind:value={theme.bodyFont} options={fontOptions} hint="Used for paragraphs, menus and buttons." />
+					<SelectField label="Text size" bind:value={theme.textSize} options={sizeOptions} hint="Makes all text and content on the website bigger or smaller." />
+					<SelectField label="Clinic name font" bind:value={theme.nameFont} options={nameFontOptions} />
+					<SelectField label="Clinic name size" bind:value={theme.nameSize} options={sizeOptions} hint="In the website header and footer." />
 					<SelectField
 						label="Corner style"
 						bind:value={theme.radius}
@@ -188,11 +196,11 @@
 			<p class="mb-2 text-sm font-semibold text-muted">Live preview</p>
 			<div style={previewStyle} class="overflow-hidden rounded-brand border border-line bg-surface shadow-sm">
 				<div class="flex items-center gap-2 border-b border-line bg-white px-4 py-3">
-					{#if clinic.logo?.url}<img src={clinic.logo.url} alt="" class="size-8 object-contain" />{/if}
-					<span class="font-heading text-lg font-semibold">{clinic.shortName || clinic.name}</span>
+					{#if clinic.logo?.url}<img src={clinic.logo.url} alt="" class="brand-logo" />{/if}
+					<span class="brand-name font-semibold">{clinic.shortName || clinic.name}</span>
 					<span class="ml-auto rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">Book</span>
 				</div>
-				<div class="space-y-3 p-5">
+				<div class="space-y-3 p-5" style="zoom: {textScale(theme)}">
 					<p class="eyebrow">Welcome</p>
 					<h3 class="font-heading text-2xl">{clinic.tagline || 'Your tagline here'}</h3>
 					<p class="text-sm text-muted">Calm, unhurried care for the whole family.</p>

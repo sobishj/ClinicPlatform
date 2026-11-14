@@ -15,7 +15,7 @@
 <div class="container-page py-12">
 	<ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 		{#each data.items as c (c.id)}
-			<li class="card flex flex-col p-6">
+			<li class="card card-lift flex flex-col p-6">
 				{#if c.image}<img src={c.image.url} alt={c.image.alt} width="200" height="200" loading="lazy" class="mb-4 h-28 w-auto self-start object-contain" />{/if}
 				<h2 class="font-heading text-xl">{c.title}</h2>
 				{#if c.issuer || c.year}<p class="mt-1 text-sm font-medium text-primary-800">{[c.issuer, c.year].filter(Boolean).join(' · ')}</p>{/if}

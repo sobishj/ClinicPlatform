@@ -34,10 +34,10 @@
 	const photo = $derived(l.photos?.[0]);
 </script>
 
-<article class="card flex h-full flex-col overflow-hidden">
-	<div class="relative aspect-[16/10] bg-surface-2">
+<article class="group card card-lift flex h-full flex-col overflow-hidden">
+	<div class="relative aspect-[16/10] overflow-hidden bg-surface-2">
 		{#if photo}
-			<img src={photo.url} alt={photo.alt} width={photo.width ?? 1200} height={photo.height ?? 800} loading="lazy" decoding="async" class="h-full w-full object-cover" />
+			<img src={photo.url} alt={photo.alt} width={photo.width ?? 1200} height={photo.height ?? 800} loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
 		{/if}
 		<span class="absolute top-3 left-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-primary-800 shadow-sm">{l.type}</span>
 	</div>

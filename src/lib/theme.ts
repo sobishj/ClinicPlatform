@@ -1,4 +1,4 @@
-import { FONT_CHOICES } from './settings/schema.js';
+import { FONT_CHOICES, type SizeStep } from './settings/schema.js';
 
 interface ThemeLike {
 	primary: string;
@@ -9,6 +9,10 @@ interface ThemeLike {
 	headingFont: string;
 	bodyFont: string;
 	radius: 'square' | 'soft' | 'round';
+	nameFont?: string;
+	nameSize?: SizeStep;
+	logoSize?: SizeStep;
+	textSize?: SizeStep;
 }
 
 const SERIF = new Set([
@@ -28,6 +32,22 @@ const safeFont = (f: string, fallback: string) =>
 	(FONT_CHOICES as readonly string[]).includes(f) ? f : fallback;
 
 const RADIUS = { square: '0.375rem', soft: '1rem', round: '1.75rem' } as const;
+/** Desktop sizes; the header scales them down a little on phones. */
+const NAME_SIZE = { sm: '1rem', md: '1.25rem', lg: '1.5rem', xl: '1.875rem' } as const;
+const LOGO_HEIGHT = { sm: '2.25rem', md: '2.75rem', lg: '3.5rem', xl: '4rem' } as const;
+/** Root font size for the public website (everything is sized in rem, so it all scales together). */
+export const TEXT_SCALE = { sm: '93.75%', md: '100%', lg: '106.25%', xl: '112.5%' } as const;
+
+export const SIZE_LABELS: Record<SizeStep, string> = { sm: 'Small', md: 'Standard', lg: 'Large', xl: 'Extra large' };
+
+const stack = (f: string) => `'${f}', ${SERIF.has(f) ? 'ui-serif, Georgia, serif' : 'ui-sans-serif, system-ui, sans-serif'}`;
+const pick = <T extends Record<string, string>>(map: T, k: string | undefined): string => map[k as keyof T] ?? map.md;
+
+/** Font used for the clinic name (falls back to the heading font). */
+export function nameFontOf(t: Pick<ThemeLike, 'nameFont' | 'headingFont'>): string {
+	return safeFont(t.nameFont || '', safeFont(t.headingFont, 'Fraunces'));
+}
+export const textScale = (t: Pick<ThemeLike, 'textSize'>) => pick(TEXT_SCALE, t.textSize);
 
 /** CSS custom properties for :root. All values are validated, so this is safe to inline. */
 export function themeCss(t: ThemeLike): string {
@@ -41,13 +61,16 @@ export function themeCss(t: ThemeLike): string {
 		`--brand-card:${safeColor(t.card ?? '#ffffff', '#ffffff')}`,
 		`--brand-font-heading:'${heading}'`,
 		`--brand-font-body:'${body}'`,
-		`--brand-radius:${RADIUS[t.radius] ?? RADIUS.soft}`
+		`--brand-radius:${RADIUS[t.radius] ?? RADIUS.soft}`,
+		`--brand-font-name:${stack(nameFontOf(t))}`,
+		`--brand-name-size:${pick(NAME_SIZE, t.nameSize)}`,
+		`--brand-logo-h:${pick(LOGO_HEIGHT, t.logoSize)}`
 	].join(';');
 }
 
 /** Google Fonts stylesheet URL for the selected heading/body fonts. */
-export function googleFontsUrl(t: Pick<ThemeLike, 'headingFont' | 'bodyFont'>): string {
-	const families = [...new Set([safeFont(t.headingFont, 'Fraunces'), safeFont(t.bodyFont, 'DM Sans')])];
+export function googleFontsUrl(t: Pick<ThemeLike, 'headingFont' | 'bodyFont' | 'nameFont'>): string {
+	const families = [...new Set([safeFont(t.headingFont, 'Fraunces'), safeFont(t.bodyFont, 'DM Sans'), nameFontOf(t)])];
 	const q = families
 		.map((f) => {
 			const name = f.replace(/ /g, '+');

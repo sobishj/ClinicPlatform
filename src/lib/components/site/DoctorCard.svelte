@@ -24,10 +24,10 @@
 	const name = $derived(doctorName(doctor));
 </script>
 
-<article class="group card flex h-full flex-col overflow-hidden">
+<article class="group card card-lift flex h-full flex-col overflow-hidden">
 	<a href="/doctors/{doctor.slug}" class="block aspect-square overflow-hidden bg-surface-2" tabindex="-1" aria-hidden="true">
 		{#if doctor.photo?.url}
-			<img src={doctor.photo.url} alt="" width={doctor.photo.width ?? 800} height={doctor.photo.height ?? 800} loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+			<img src={doctor.photo.url} alt="" width={doctor.photo.width ?? 800} height={doctor.photo.height ?? 800} loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.06]" />
 		{/if}
 	</a>
 	<div class="flex flex-1 flex-col p-5">

@@ -26,7 +26,7 @@
 			<li>
 				<figure class="overflow-hidden rounded-brand bg-surface-2">
 					<a href={g.image.url} target="_blank" rel="noopener">
-						<img src={g.image.url} alt={g.image.alt} width={g.image.width ?? 1200} height={g.image.height ?? 900} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover transition-transform hover:scale-[1.02]" />
+						<img src={g.image.url} alt={g.image.alt} width={g.image.width ?? 1200} height={g.image.height ?? 900} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover transition-transform duration-500 hover:scale-[1.05]" />
 					</a>
 					{#if g.caption}<figcaption class="px-3 py-2 text-sm">{g.caption}</figcaption>{/if}
 				</figure>

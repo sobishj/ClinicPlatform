@@ -20,7 +20,7 @@
 	function edit(item?: (typeof data.items)[number]) {
 		errors = {};
 		editing = item
-			? { id: item.id, active: item.active, data: { ...emptyRecord(def.key as CollectionKey), ...structuredClone(item.data) } }
+			? { id: item.id, active: item.active, data: { ...emptyRecord(def.key as CollectionKey), ...$state.snapshot(item.data) } }
 			: { active: true, data: emptyRecord(def.key as CollectionKey) };
 		open = true;
 	}

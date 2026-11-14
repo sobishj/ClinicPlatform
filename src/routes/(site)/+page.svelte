@@ -69,18 +69,18 @@
 	{:else if s.id === 'intents' && data.intents.length}
 		<section class="relative z-20 {data.sections[0]?.id === 'hero' && data.slides.length ? 'pt-8 md:-mt-14 md:pt-0' : 'pt-16'} pb-4" aria-labelledby="h-intents">
 			<div class="container-page">
-				<div class="card overflow-hidden shadow-xl">
+				<div class="card shadow-xl">
 					<h2 id="h-intents" class="border-b border-line px-6 py-4 font-heading text-xl">{s.heading}</h2>
 					<div class="grid divide-y divide-line sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
 					{#each data.intents as it (it.id)}
-						<div class="flex flex-col p-6">
-							<span class="mb-3 flex size-11 items-center justify-center rounded-2xl bg-accent-100 text-accent-700"><Icon name={it.icon || 'sparkles'} size={22} /></span>
+						<div class="group tile-lift flex flex-col p-6">
+							<span class="icon-pop mb-3 flex size-11 items-center justify-center rounded-2xl bg-accent-100 text-accent-700 group-hover:bg-accent group-hover:text-white"><Icon name={it.icon || 'sparkles'} size={22} /></span>
 							<h3 class="font-heading text-lg">{it.title}</h3>
 							{#if it.description}<p class="mt-1.5 text-sm leading-relaxed text-muted">{it.description}</p>{/if}
 							{#if it.links?.length}
 								<ul class="mt-auto space-y-1 pt-4">
 									{#each it.links as link (link.href + link.label)}
-										<li><a href={link.href} class="inline-flex items-center gap-1 text-sm font-semibold text-primary-700 hover:underline">{link.label} <Icon name="arrow-right" size={14} /></a></li>
+										<li><a href={link.href} class="group/l inline-flex items-center gap-1 text-sm font-semibold text-primary-700 hover:underline">{link.label} <Icon name="arrow-right" size={14} class="transition-transform duration-300 group-hover/l:translate-x-1" /></a></li>
 									{/each}
 								</ul>
 							{/if}
@@ -103,7 +103,7 @@
 				{#if data.serviceGroups.length > 1}
 					<ul class="mt-8 flex flex-wrap gap-2" aria-label="Browse by category">
 						{#each data.serviceGroups as g (g.category)}
-							<li><a href="/services#{slugify(g.category)}" class="inline-block rounded-full border border-line bg-card px-4 py-2 text-sm font-medium hover:border-primary hover:text-primary-700">{g.category}</a></li>
+							<li><a href="/services#{slugify(g.category)}" class="chip-lift inline-block rounded-full border border-line bg-card px-4 py-2 text-sm font-medium hover:text-primary-700">{g.category}</a></li>
 						{/each}
 					</ul>
 				{/if}
@@ -116,8 +116,8 @@
 					{@render heading(s)}
 					<ol class="space-y-6">
 						{#each data.process as step, i (step.id)}
-							<li class="flex gap-5">
-								<span class="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-primary/30 font-heading text-lg text-primary-800">{i + 1}</span>
+							<li class="group flex gap-5">
+								<span class="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-primary/30 font-heading text-lg text-primary-800 transition-all duration-300 group-hover:scale-110 group-hover:border-primary group-hover:bg-primary group-hover:text-white">{i + 1}</span>
 								<div>
 									<h3 class="font-heading text-xl">{step.title}</h3>
 									{#if step.description}<p class="mt-1 leading-relaxed text-muted">{step.description}</p>{/if}
@@ -127,8 +127,8 @@
 					</ol>
 				</div>
 				{#if s.image}
-					<div class="overflow-hidden rounded-brand">
-						<img src={s.image.url} alt={s.image.alt} width={s.image.width ?? 1200} height={s.image.height ?? 900} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover" />
+					<div class="group overflow-hidden rounded-brand">
+						<img src={s.image.url} alt={s.image.alt} width={s.image.width ?? 1200} height={s.image.height ?? 900} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
 					</div>
 				{/if}
 			</div>
@@ -161,7 +161,7 @@
 				{@render heading(s, 'center')}
 				<ul class="flex flex-wrap items-stretch justify-center gap-4">
 					{#each data.certifications as c (c.id)}
-						<li class="card flex w-40 flex-col items-center p-4 text-center sm:w-48">
+						<li class="card card-lift flex w-40 flex-col items-center p-4 text-center sm:w-48">
 							{#if c.image}<img src={c.image.url} alt={c.image.alt} width="160" height="160" loading="lazy" class="mb-3 size-24 object-contain" />{/if}
 							<p class="text-sm font-semibold">{c.title}</p>
 							{#if c.issuer}<p class="mt-0.5 text-xs text-muted">{c.issuer}{c.year ? ` · ${c.year}` : ''}</p>{/if}
@@ -178,8 +178,8 @@
 				{@render heading(s)}
 				<ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 					{#each items as t (t.id)}
-						<li class="flex gap-4">
-							<span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary-50 text-primary-800"><Icon name={t.icon || 'sparkles'} size={24} /></span>
+						<li class="group flex gap-4">
+							<span class="icon-pop flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary-50 text-primary-800 group-hover:bg-primary group-hover:text-white"><Icon name={t.icon || 'sparkles'} size={24} /></span>
 							<div><h3 class="font-heading text-lg">{t.title}</h3>{#if t.description}<p class="mt-1 text-sm leading-relaxed text-muted">{t.description}</p>{/if}</div>
 						</li>
 					{/each}
@@ -192,7 +192,7 @@
 				{@render heading(s, 'center')}
 				<ul class="mx-auto flex max-w-4xl flex-wrap justify-center gap-3">
 					{#each data.amenities as a (a.id)}
-						<li class="inline-flex items-center gap-2 rounded-full border border-line bg-card px-4 py-2.5 text-sm font-medium"><Icon name={a.icon || 'check'} size={18} class="text-primary-700" /> {a.title}</li>
+						<li class="chip-lift inline-flex items-center gap-2 rounded-full border border-line bg-card px-4 py-2.5 text-sm font-medium"><Icon name={a.icon || 'check'} size={18} class="text-primary-700" /> {a.title}</li>
 					{/each}
 				</ul>
 			</div>
@@ -206,7 +206,7 @@
 				</div>
 				<ul class="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-3">
 					{#each data.testimonials as t (t.id)}
-						<li class="card flex w-[85%] shrink-0 snap-start flex-col p-6 md:w-auto">
+						<li class="card card-lift flex w-[85%] shrink-0 snap-start flex-col p-6 md:w-auto">
 							<Stars rating={t.rating ?? 5} />
 							<blockquote class="mt-3 flex-1 leading-relaxed text-ink">“{t.text}”</blockquote>
 							<p class="mt-4 text-sm">
@@ -224,7 +224,7 @@
 				{@render heading(s, 'center')}
 				<ul class="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
 					{#each data.membership as p (p.id)}
-						<li class="card flex flex-col p-7 {p.highlighted ? 'border-primary ring-2 ring-primary' : ''}">
+						<li class="card card-lift flex flex-col p-7 {p.highlighted ? 'border-primary ring-2 ring-primary' : ''}">
 							<h3 class="font-heading text-2xl">{p.name}</h3>
 							{#if p.price}<p class="mt-2"><span class="font-heading text-3xl">{p.price}</span> <span class="text-muted">{p.period}</span></p>{/if}
 							{#if p.description}<p class="mt-2 text-muted">{p.description}</p>{/if}

@@ -72,7 +72,7 @@
 				<h2 id="svc" class="mb-4 text-2xl">{l.services}</h2>
 				<ul class="flex flex-wrap gap-2">
 					{#each data.services as s (s.id)}
-						<li><a href="/services/{s.slug}" class="inline-flex items-center gap-2 rounded-full border border-line bg-card px-4 py-2 text-sm hover:border-primary"><Icon name={s.icon ?? 'sparkles'} size={16} class="text-primary-700" /> {s.name}</a></li>
+						<li><a href="/services/{s.slug}" class="inline-flex items-center gap-2 chip-lift rounded-full border border-line bg-card px-4 py-2 text-sm hover:text-primary-700"><Icon name={s.icon ?? 'sparkles'} size={16} class="text-primary-700" /> {s.name}</a></li>
 					{/each}
 				</ul>
 			</section>

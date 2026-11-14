@@ -36,16 +36,16 @@
 	onfocusout={onFocusOut}
 >
 	<div class="flex items-center">
-		<a {href} class="rounded-full py-2 pr-1 pl-3 text-[15px] font-medium hover:text-primary-700 {active ? 'text-primary-700' : ''}" aria-current={active ? 'page' : undefined}>{label}</a>
+		<a {href} class="nav-link rounded-full py-2 pr-1 pl-3 text-[15px] font-medium hover:text-primary-700 {active ? 'text-primary-700' : ''}" aria-current={active ? 'page' : undefined}>{label}</a>
 		<button
 			type="button"
-			class="rounded-full p-1.5 hover:bg-primary-50"
+			class="rounded-full p-1.5 transition-colors hover:bg-primary-50"
 			aria-expanded={open}
 			aria-controls="dd-{uid}"
 			aria-label="Show {label} menu"
 			onclick={() => (open = !open)}
 		>
-			<Icon name="chevron-down" size={16} class="transition-transform {open ? 'rotate-180' : ''}" />
+			<Icon name="chevron-down" size={16} class="transition-transform duration-300 {open ? 'rotate-180' : ''}" />
 		</button>
 	</div>
 	<div
