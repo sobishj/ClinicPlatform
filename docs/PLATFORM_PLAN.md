@@ -1,6 +1,6 @@
 # Clinic Platform — Plan
 
-Status: **draft, waiting for approval.** Nothing structural has been changed yet.
+Status: **superseded in part by [REFACTOR_PLAN.md](REFACTOR_PLAN.md)** — the two briefs are merged there (Kysely instead of Drizzle, a database per tenant, add-ons). Sections on templates, the site editor, domains and white-label still apply. Not built yet.
 
 This turns the single-clinic Orchid Dental Care site into one codebase and one deployment that serves many clinic websites. Each site must look like a standalone website built only for that client.
 
