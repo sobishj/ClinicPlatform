@@ -1,15 +1,20 @@
 /**
  * Platform implementation for the dedicated-server build (adapter-node).
  * Selected at build time via the `#target` alias in vite.config.ts — never imported on Cloudflare.
+ *
+ * Layout on disk (defaults):
+ *   data/platform.db                     clients, domains, console users
+ *   data/tenants/<tenant id>/site.db     one database per client
+ *   data/tenants/<tenant id>/uploads/…   that client's uploaded files
  */
 import Database from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
-import { mkdirSync, existsSync } from 'node:fs';
+import { mkdirSync, existsSync, renameSync } from 'node:fs';
 import { mkdir, readFile, writeFile, unlink, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import {
-	DATABASE_PATH,
+	PLATFORM_DATABASE_PATH,
+	TENANT_DATA_DIR,
 	STORAGE_DRIVER,
 	UPLOAD_DIR,
 	S3_ENDPOINT,
@@ -19,45 +24,134 @@ import {
 	S3_SECRET_ACCESS_KEY
 } from '$app/env/private';
 import { schema, type DB } from '../db/index.js';
+import { platformSchema, type PlatformDB } from '../platform-db/index.js';
+import { migrate } from '../db/migrator.js';
+import { TENANT_MIGRATIONS, PLATFORM_MIGRATIONS } from '../db/migrations.js';
 import { type Storage, mimeFromKey } from '../storage/types.js';
 import { s3Storage } from '../storage/s3.js';
 import type { EmailProvider, ResolvedEmailConfig } from '../email/types.js';
 
 export const TARGET = 'node' as const;
 
-let db: DB | undefined;
+const tenantRoot = () => path.resolve(TENANT_DATA_DIR ?? './data/tenants');
+const SAFE_REF = /^[A-Za-z0-9_-]{1,80}$/;
 
-export function getDb(_platform?: App.Platform): DB {
-	if (db) return db;
-	const file = path.resolve(DATABASE_PATH ?? './data/clinic.db');
+function openSqlite(file: string) {
 	mkdirSync(path.dirname(file), { recursive: true });
 	const sqlite = new Database(file);
 	sqlite.pragma('journal_mode = WAL');
 	sqlite.pragma('foreign_keys = ON');
 	sqlite.pragma('busy_timeout = 5000');
-	const instance = drizzle(sqlite, { schema });
-	const migrationsFolder = path.resolve(process.env.MIGRATIONS_DIR ?? './drizzle');
-	if (existsSync(migrationsFolder)) migrate(instance, { migrationsFolder });
-	db = instance as unknown as DB;
-	return db;
+	return sqlite;
 }
 
-let storage: Storage | undefined;
+let platformDb: Promise<PlatformDB> | undefined;
 
-export function getStorage(_platform?: App.Platform): Storage {
-	if (storage) return storage;
-	if (STORAGE_DRIVER === 's3' && S3_ENDPOINT && S3_BUCKET && S3_ACCESS_KEY_ID && S3_SECRET_ACCESS_KEY) {
-		storage = s3Storage({
-			endpoint: S3_ENDPOINT,
-			bucket: S3_BUCKET,
-			region: S3_REGION,
-			accessKeyId: S3_ACCESS_KEY_ID,
-			secretAccessKey: S3_SECRET_ACCESS_KEY
+export function getPlatformDb(_platform?: App.Platform): Promise<PlatformDB> {
+	platformDb ??= (async () => {
+		const db = drizzle(openSqlite(path.resolve(PLATFORM_DATABASE_PATH ?? './data/platform.db')), {
+			schema: platformSchema
 		});
-	} else {
-		storage = localStorage(path.resolve(UPLOAD_DIR ?? './data/uploads'));
+		await migrate(db as never, PLATFORM_MIGRATIONS);
+		return db as unknown as PlatformDB;
+	})();
+	return platformDb;
+}
+
+const tenantDbs = new Map<string, { sqlite: Database.Database; db: Promise<DB> }>();
+
+function tenantDbFile(dbRef: string): string {
+	if (!SAFE_REF.test(dbRef)) throw new Error('Invalid database reference');
+	return path.join(tenantRoot(), dbRef, 'site.db');
+}
+
+export function getTenantDb(_platform: App.Platform | undefined, dbRef: string): Promise<DB> {
+	let entry = tenantDbs.get(dbRef);
+	if (!entry) {
+		const sqlite = openSqlite(tenantDbFile(dbRef));
+		const instance = drizzle(sqlite, { schema });
+		const db = migrate(instance as never, TENANT_MIGRATIONS).then(() => instance as unknown as DB);
+		db.catch(() => tenantDbs.delete(dbRef));
+		entry = { sqlite, db };
+		tenantDbs.set(dbRef, entry);
 	}
-	return storage;
+	return entry.db;
+}
+
+/** On a server, client databases are created on demand (no fixed slots). */
+export function databaseSlots(_platform?: App.Platform): string[] | null {
+	return null;
+}
+
+/** Reserve the database for a new client. Returns its reference (the file is created on first open). */
+export async function createTenantDatabase(
+	_platform: App.Platform | undefined,
+	tenantId: string,
+	_slot?: string
+): Promise<string> {
+	if (existsSync(tenantDbFile(tenantId)))
+		throw new Error('A database for this client already exists.');
+	return tenantId;
+}
+
+/** Remove a client's database and files. They are moved to <TENANT_DATA_DIR>/_deleted/, not erased. */
+export async function retireTenantDatabase(
+	_platform: App.Platform | undefined,
+	dbRef: string
+): Promise<void> {
+	const entry = tenantDbs.get(dbRef);
+	if (entry) {
+		entry.sqlite.close();
+		tenantDbs.delete(dbRef);
+	}
+	const dir = path.dirname(tenantDbFile(dbRef));
+	if (!existsSync(dir)) return;
+	const target = path.join(
+		tenantRoot(),
+		'_deleted',
+		`${dbRef}-${new Date().toISOString().replace(/[:.]/g, '-')}`
+	);
+	mkdirSync(path.dirname(target), { recursive: true });
+	renameSync(dir, target);
+}
+
+export function getStorage(
+	_platform: App.Platform | undefined,
+	tenant: { id: string; db: DB }
+): Storage {
+	if (!SAFE_REF.test(tenant.id)) throw new Error('Invalid tenant id');
+	if (
+		STORAGE_DRIVER === 's3' &&
+		S3_ENDPOINT &&
+		S3_BUCKET &&
+		S3_ACCESS_KEY_ID &&
+		S3_SECRET_ACCESS_KEY
+	) {
+		return prefixed(
+			s3Storage({
+				endpoint: S3_ENDPOINT,
+				bucket: S3_BUCKET,
+				region: S3_REGION,
+				accessKeyId: S3_ACCESS_KEY_ID,
+				secretAccessKey: S3_SECRET_ACCESS_KEY
+			}),
+			`tenants/${tenant.id}/`
+		);
+	}
+	return localStorage(path.join(path.resolve(UPLOAD_DIR ?? tenantRoot()), tenant.id));
+}
+
+/** Keep each client's files under their own prefix in a shared bucket. */
+function prefixed(inner: Storage, prefix: string): Storage {
+	return {
+		driver: inner.driver,
+		put: (key, data, type) => inner.put(prefix + key, data, type),
+		get: (key) => inner.get(prefix + key),
+		delete: (key) => inner.delete(prefix + key),
+		list: inner.list
+			? async (p = '') => (await inner.list!(prefix + p)).map((k) => k.slice(prefix.length))
+			: undefined
+	};
 }
 
 function localStorage(root: string): Storage {
@@ -99,7 +193,7 @@ function localStorage(root: string): Storage {
 					else out.push(path.relative(root, full).split(path.sep).join('/'));
 				}
 			}
-			await walk(root);
+			await walk(path.join(root, 'uploads'));
 			return out.filter((k) => k.startsWith(prefix));
 		}
 	};
@@ -135,11 +229,17 @@ export function waitUntil(_platform: App.Platform | undefined, promise: Promise<
 	promise.catch((err) => console.error('[background]', err));
 }
 
-/** Page cache (anonymous GETs). In-memory, bounded. */
-const memoryCache = new Map<string, { body: string; headers: [string, string][]; status: number; expires: number }>();
+/** Page cache (anonymous GETs). In-memory, bounded. Keys always start with the client id. */
+const memoryCache = new Map<
+	string,
+	{ body: string; headers: [string, string][]; status: number; expires: number }
+>();
 const MAX_CACHE_ENTRIES = 500;
 
-export async function cacheGet(_platform: App.Platform | undefined, key: string): Promise<Response | null> {
+export async function cacheGet(
+	_platform: App.Platform | undefined,
+	key: string
+): Promise<Response | null> {
 	const hit = memoryCache.get(key);
 	if (!hit) return null;
 	if (hit.expires < Date.now()) {

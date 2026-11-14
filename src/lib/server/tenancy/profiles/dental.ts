@@ -1,5 +1,5 @@
 import type { Profile, SeedService } from './types.js';
-import type { WeeklyHours } from '../../src/lib/types.js';
+import type { WeeklyHours } from '../../../types.js';
 
 const am = { open: '09:30', close: '13:30' };
 const pm = { open: '16:00', close: '20:00' };

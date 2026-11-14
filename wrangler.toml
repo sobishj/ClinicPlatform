@@ -1,6 +1,19 @@
-# Cloudflare Workers (static assets) configuration.
-# Build with:  npm run build:cf     Deploy with:  npm run deploy:cf
-name = "clinic-site"
+# Cloudflare Workers configuration for the clinic platform.
+# Build with:  npm run build:cf     Run locally:  npm run preview:cf     Deploy:  npm run deploy:cf
+#
+# Databases (D1):
+#   PLATFORM_DB   clients, their web addresses, console logins
+#   TENANT_*      one database per client ("slots"). Bindings are fixed at deploy time, so declare
+#                 a few spare slots; the console assigns a free one when you add a client. To add
+#                 a slot:  npx wrangler d1 create clinic-tenant-3  → add a block below → deploy.
+#   Tables are created automatically on first use (migrations are bundled into the Worker).
+#
+# The database_id values below are placeholders that work for local development
+# (`wrangler dev` keeps local D1 data in .wrangler/). Before the first deploy, create the
+# databases (npx wrangler d1 create …) and paste their real ids here.
+#
+# Free plan: 10 D1 databases per account (platform + up to 9 clients).
+name = "clinic-platform"
 main = ".svelte-kit/cloudflare/_worker.js"
 compatibility_date = "2026-10-01"
 compatibility_flags = ["nodejs_als"]
@@ -12,23 +25,34 @@ directory = ".svelte-kit/cloudflare"
 [observability]
 enabled = true
 
-# D1 database. Create it with:  npx wrangler d1 create clinic-db
-# then paste the database_id below.
 [[d1_databases]]
-binding = "DB"
-database_name = "clinic-db"
-database_id = "bd745d43-c7e9-4378-ad39-cc29b959f80f"
-migrations_dir = "drizzle"
+binding = "PLATFORM_DB"
+database_name = "clinic-platform"
+database_id = "00000000-0000-0000-0000-000000000000"
 
-# No R2 needed: uploaded images and PDFs are stored in D1 (table media_chunks)
-# and served from /media with edge caching.
+[[d1_databases]]
+binding = "TENANT_1"
+database_name = "clinic-tenant-1"
+database_id = "00000000-0000-0000-0000-000000000001"
 
-# Cron trigger for webhook retries. The worker forwards it to /api/internal/cron.
-# (Optional; deliveries are also retried opportunistically on admin requests.)
-# [triggers]
-# crons = ["*/10 * * * *"]
+[[d1_databases]]
+binding = "TENANT_2"
+database_name = "clinic-tenant-2"
+database_id = "00000000-0000-0000-0000-000000000002"
+
+[[d1_databases]]
+binding = "TENANT_3"
+database_name = "clinic-tenant-3"
+database_id = "00000000-0000-0000-0000-000000000003"
+
+# No R2 needed: uploaded images and PDFs are stored in each client's own D1 database
+# (table media_chunks) and served from /media on the client's own domain.
+
+# Optional cron for webhook retries: call POST https://<console host>/console/cron with
+# Authorization: Bearer $CRON_SECRET every ~10 minutes (e.g. from a small scheduled worker).
 
 [vars]
 EMAIL_PROVIDER = "none"
+PLATFORM_ADMIN_HOST = "console.localhost"
 # Secrets: set with `npx wrangler secret put NAME`
 #   RESEND_API_KEY, TURNSTILE_SECRET_KEY, CRON_SECRET, SETUP_TOKEN

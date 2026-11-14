@@ -1,23 +1,29 @@
-# Dedicated server: app + Caddy (automatic HTTPS) + daily backups.
+# Any server (VPS, AWS EC2, Azure VM, Google Compute Engine, on-premise): app + Caddy
+# (automatic HTTPS for every client domain) + daily backups + housekeeping.
 #
-#   cp .env.example .env        # set DOMAIN, ORIGIN and any email/Turnstile keys
+#   cp .env.example .env              # set PLATFORM_ADMIN_HOST (console address) and CRON_SECRET
 #   docker compose up -d --build
-#   docker compose exec app npx tsx scripts/create-admin.ts --email=you@clinic.com
-#   (or open https://DOMAIN/admin/setup)
+#   docker compose exec app npm run console:admin -- --email=you@example.com --password='a-long-password'
+#   (or open https://<PLATFORM_ADMIN_HOST>/console — the first visit creates the console login)
 #
-# Data lives in the `clinic-data` volume (SQLite + uploads); backups in ./backups.
+# Then add clients in the console. Point each client domain (and the console host) at this
+# server's IP; Caddy fetches certificates automatically.
+#
+# Data lives in the `clinic-data` volume:
+#   /data/platform.db                 clients, addresses, console logins
+#   /data/tenants/<id>/site.db        each client's own database
+#   /data/tenants/<id>/uploads/…      each client's uploaded files
 services:
   app:
     build: .
     restart: unless-stopped
     env_file: .env
     environment:
-      ORIGIN: https://${DOMAIN:?Set DOMAIN in .env}
-      # Real client IPs from Caddy (used for rate limiting)
+      PLATFORM_ADMIN_HOST: ${PLATFORM_ADMIN_HOST:?Set PLATFORM_ADMIN_HOST in .env}
+      # Behind Caddy: real protocol, host and client IP come from proxy headers.
+      PROTOCOL_HEADER: x-forwarded-proto
       ADDRESS_HEADER: X-Forwarded-For
       XFF_DEPTH: '1'
-      DATABASE_PATH: /data/clinic.db
-      UPLOAD_DIR: /data/uploads
     volumes:
       - clinic-data:/data
     expose:
@@ -27,8 +33,6 @@ services:
     image: caddy:2.8
     restart: unless-stopped
     depends_on: [app]
-    environment:
-      DOMAIN: ${DOMAIN}
     ports:
       - '80:80'
       - '443:443'
@@ -52,17 +56,18 @@ services:
       - ./deploy/backup.sh:/backup.sh:ro
     entrypoint: ['/bin/sh', '/backup.sh', 'loop']
 
-  # Optional: hit the housekeeping endpoint every 10 minutes (webhook retries, cleanup).
+  # Housekeeping for every client every 10 minutes (webhook retries, cleanup). Needs CRON_SECRET.
   cron:
     image: alpine:3.20
     restart: unless-stopped
     depends_on: [app]
     environment:
       CRON_SECRET: ${CRON_SECRET:-}
+      CONSOLE_HOST: ${PLATFORM_ADMIN_HOST:-}
     entrypoint:
       - /bin/sh
       - -c
-      - 'apk add --no-cache curl >/dev/null; while true; do [ -n "$$CRON_SECRET" ] && curl -fsS -X POST -H "Authorization: Bearer $$CRON_SECRET" http://app:3000/api/internal/cron >/dev/null; sleep 600; done'
+      - 'apk add --no-cache curl >/dev/null; while true; do [ -n "$$CRON_SECRET" ] && curl -fsS -X POST -H "Host: $$CONSOLE_HOST" -H "X-Forwarded-Proto: https" -H "Authorization: Bearer $$CRON_SECRET" http://app:3000/console/cron >/dev/null; sleep 600; done'
 
 volumes:
   clinic-data:

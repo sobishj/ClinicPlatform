@@ -3,10 +3,10 @@
 	let { data, form }: PageProps = $props();
 </script>
 
-<div class="w-full max-w-md">
+<div class="mx-auto w-full max-w-md py-16">
 	<div class="mb-6 text-center">
 		<h1 class="font-sans text-2xl font-semibold">Welcome</h1>
-		<p class="text-sm text-muted">Create the first super-admin account for {data.site.clinic.name}.</p>
+		<p class="text-sm text-muted">Create the first console account. It can add and manage every client site.</p>
 	</div>
 	<form method="POST" class="card space-y-4 p-6 shadow-sm">
 		{#if form?.message}<p role="alert" class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{form.message}</p>{/if}

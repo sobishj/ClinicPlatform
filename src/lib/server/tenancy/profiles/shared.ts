@@ -1,4 +1,4 @@
-import type { WeeklyHours } from '../../src/lib/types.js';
+import type { WeeklyHours } from '../../../types.js';
 
 /** Demo branches (fictional addresses and numbers). Replace through the admin panel. */
 export const DEMO_LOCATIONS = [

@@ -1,5 +1,5 @@
-import type { WeeklyHours, ProcedureStep, ServiceFaq } from '../../src/lib/types.js';
-import type { ClinicType } from '../../src/lib/settings/schema.js';
+import type { WeeklyHours, ProcedureStep, ServiceFaq } from '../../../types.js';
+import type { ClinicType } from '../../../settings/schema.js';
 
 export interface SeedService {
 	name: string;

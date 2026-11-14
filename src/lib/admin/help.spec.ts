@@ -5,13 +5,15 @@ import { pageHelp } from './help.js';
 import { settingsSchemas } from '../settings/schema.js';
 
 /** Pages shown before signing in don't use the page header. */
-const PUBLIC = ['/admin/login', '/admin/forgot', '/admin/reset/[token]', '/admin/setup'];
+const PUBLIC = ['/admin/login', '/admin/forgot', '/admin/reset/[token]'];
 
 function adminRouteIds(dir = 'src/routes/admin'): string[] {
 	return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
 		const full = path.join(dir, e.name);
 		if (e.isDirectory()) return adminRouteIds(full);
-		return e.name === '+page.svelte' ? ['/' + path.relative('src/routes', dir).split(path.sep).join('/')] : [];
+		return e.name === '+page.svelte'
+			? ['/' + path.relative('src/routes', dir).split(path.sep).join('/')]
+			: [];
 	});
 }
 

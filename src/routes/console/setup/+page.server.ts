@@ -2,10 +2,10 @@ import { fail, redirect } from '@sveltejs/kit';
 import { sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { SETUP_TOKEN } from '$app/env/private';
-import { users } from '#lib/server/db/schema.js';
+import { platformUsers, platformAudit } from '#lib/server/platform-db/schema.js';
 import { hashPassword, safeEqual } from '#lib/server/crypto.js';
-import { createSession } from '#lib/server/auth.js';
-import { audit } from '#lib/server/audit.js';
+import { createConsoleSession, consolePdb } from '#lib/server/console/auth.js';
+import type { PlatformDB } from '#lib/server/platform-db/index.js';
 import type { Actions, PageServerLoad } from './$types';
 
 const schema = z.object({
@@ -15,21 +15,22 @@ const schema = z.object({
 	token: z.string().optional()
 });
 
-async function hasUsers(db: App.Locals['db']) {
-	const r = await db.get<{ n: number }>(sql`SELECT COUNT(*) AS n FROM users`);
-	return (r?.n ?? 0) > 0;
+async function hasUsers(pdb: PlatformDB) {
+	const r = await pdb.get<{ n: number }>(sql`SELECT COUNT(*) AS n FROM platform_users`);
+	return Number(r?.n ?? 0) > 0;
 }
 
-export const load: PageServerLoad = async ({ locals }) => {
-	if (await hasUsers(locals.db)) redirect(303, '/admin/login');
+/** First run only: create the first console (super admin) account. */
+export const load: PageServerLoad = async (event) => {
+	if (await hasUsers(consolePdb(event))) redirect(303, '/console/login');
 	return { title: 'Set up', needsToken: !!SETUP_TOKEN };
 };
 
 export const actions: Actions = {
 	default: async (event) => {
-		const { locals, request, cookies } = event;
-		if (await hasUsers(locals.db)) redirect(303, '/admin/login');
-		const form = Object.fromEntries(await request.formData());
+		const pdb = consolePdb(event);
+		if (await hasUsers(pdb)) redirect(303, '/console/login');
+		const form = Object.fromEntries(await event.request.formData());
 		const parsed = schema.safeParse(form);
 		if (!parsed.success) {
 			return fail(400, { values: { name: form.name, email: form.email }, message: parsed.error.issues[0].message });
@@ -38,16 +39,14 @@ export const actions: Actions = {
 			return fail(403, { values: { name: form.name, email: form.email }, message: 'The setup token is not correct.' });
 		}
 		const id = crypto.randomUUID();
-		await locals.db.insert(users).values({
+		await pdb.insert(platformUsers).values({
 			id,
 			email: parsed.data.email,
 			name: parsed.data.name,
-			passwordHash: await hashPassword(parsed.data.password),
-			role: 'super_admin'
+			passwordHash: await hashPassword(parsed.data.password)
 		});
-		await createSession(locals.db, cookies, id, request.headers.get('user-agent'));
-		locals.user = { id, email: parsed.data.email, name: parsed.data.name, role: 'super_admin', locationIds: [] };
-		await audit(event, 'create', 'user', id, 'Initial super admin created via setup screen');
-		redirect(303, '/admin');
+		await pdb.insert(platformAudit).values({ userEmail: parsed.data.email, action: 'setup', summary: 'First console account created' });
+		await createConsoleSession(pdb, event.cookies, id);
+		redirect(303, '/console');
 	}
 };

@@ -1,8 +1,12 @@
 #!/bin/sh
-# Daily SQLite backup (consistent online snapshot) + uploads archive, with rotation.
+# Daily backup of the platform database and every client's database (consistent online
+# snapshots) plus each client's uploaded files, with rotation.
 #   sh deploy/backup.sh once          # run one backup now
 #   sh deploy/backup.sh loop          # run daily at $BACKUP_HOUR (used by docker compose)
 # Env: DATA_DIR (/data), BACKUP_DIR (/backups), KEEP_DAYS (14), BACKUP_HOUR (2)
+#
+# Layout: $BACKUP_DIR/<stamp>/platform.db.gz
+#         $BACKUP_DIR/<stamp>/tenants/<id>/site.db.gz + uploads.tar.gz
 set -eu
 DATA_DIR="${DATA_DIR:-/data}"
 BACKUP_DIR="${BACKUP_DIR:-/backups}"
@@ -16,23 +20,38 @@ ensure_tools() {
 	}
 }
 
+# .backup uses SQLite's online backup API: safe while the app is running (WAL mode).
+snapshot() {
+	src="$1"
+	dest="$2"
+	mkdir -p "$(dirname "$dest")"
+	sqlite3 "$src" ".backup '$dest'"
+	sqlite3 "$dest" "PRAGMA integrity_check;" | grep -q '^ok$' || {
+		echo "Integrity check failed for $src" >&2
+		return 1
+	}
+	gzip -f "$dest"
+}
+
 backup_once() {
 	ensure_tools
-	mkdir -p "$BACKUP_DIR"
 	stamp="$(date +%Y%m%d-%H%M%S)"
-	# .backup uses SQLite's online backup API: safe while the app is running (WAL mode).
-	sqlite3 "$DATA_DIR/clinic.db" ".backup '$BACKUP_DIR/clinic-$stamp.db'"
-	sqlite3 "$BACKUP_DIR/clinic-$stamp.db" "PRAGMA integrity_check;" | grep -q '^ok$' || {
-		echo "Integrity check failed for clinic-$stamp.db" >&2
-		exit 1
-	}
-	gzip -f "$BACKUP_DIR/clinic-$stamp.db"
-	if [ -d "$DATA_DIR/uploads" ]; then
-		tar -czf "$BACKUP_DIR/uploads-$stamp.tar.gz" -C "$DATA_DIR" uploads
-	fi
-	find "$BACKUP_DIR" -name 'clinic-*.db.gz' -mtime +"$KEEP_DAYS" -delete
-	find "$BACKUP_DIR" -name 'uploads-*.tar.gz' -mtime +"$KEEP_DAYS" -delete
-	echo "[backup] $stamp done"
+	out="$BACKUP_DIR/$stamp"
+	mkdir -p "$out"
+	failed=0
+	[ -f "$DATA_DIR/platform.db" ] && { snapshot "$DATA_DIR/platform.db" "$out/platform.db" || failed=1; }
+	for db in "$DATA_DIR"/tenants/*/site.db; do
+		[ -f "$db" ] || continue
+		dir="$(dirname "$db")"
+		id="$(basename "$dir")"
+		snapshot "$db" "$out/tenants/$id/site.db" || failed=1
+		if [ -d "$dir/uploads" ]; then
+			tar -czf "$out/tenants/$id/uploads.tar.gz" -C "$dir" uploads
+		fi
+	done
+	find "$BACKUP_DIR" -mindepth 1 -maxdepth 1 -type d -mtime +"$KEEP_DAYS" -exec rm -rf {} +
+	echo "[backup] $stamp done$([ "$failed" = 1 ] && echo ' (with errors)')"
+	return "$failed"
 }
 
 case "${1:-once}" in

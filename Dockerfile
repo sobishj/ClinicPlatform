@@ -1,4 +1,4 @@
-# Dedicated-server image (adapter-node + SQLite + local disk storage).
+# Server image (adapter-node): platform database + one SQLite database and upload folder per client.
 #   docker compose up -d --build
 # ── build ──────────────────────────────────────────────────────────────
 FROM node:22-bookworm-slim AS build
@@ -16,15 +16,16 @@ WORKDIR /app
 ENV NODE_ENV=production \
     PORT=3000 \
     HOST=0.0.0.0 \
-    DATABASE_PATH=/data/clinic.db \
-    UPLOAD_DIR=/data/uploads \
-    MIGRATIONS_DIR=/app/drizzle \
+    PLATFORM_DATABASE_PATH=/data/platform.db \
+    TENANT_DATA_DIR=/data/tenants \
     BODY_SIZE_LIMIT=10M
 COPY --from=build /app/package.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/build ./build
 COPY --from=build /app/drizzle ./drizzle
-# Scripts (seed, create-admin, migrate-data) run with tsx and import from src/lib.
+COPY --from=build /app/drizzle-platform ./drizzle-platform
+COPY --from=build /app/templates ./templates
+# Scripts (tenant, seed, migrate-data) run with tsx and import from src/lib.
 COPY --from=build /app/scripts ./scripts
 COPY --from=build /app/src/lib ./src/lib
 COPY --from=build /app/static ./static
@@ -32,5 +33,5 @@ RUN mkdir -p /data && chown -R node:node /data
 USER node
 VOLUME ["/data"]
 EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s CMD node -e "fetch('http://127.0.0.1:3000/robots.txt').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s CMD node -e "fetch('http://127.0.0.1:3000/_internal/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 CMD ["node", "build"]

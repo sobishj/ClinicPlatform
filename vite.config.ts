@@ -4,6 +4,8 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import adapterCloudflare from '@sveltejs/adapter-cloudflare';
 import adapterNode from '@sveltejs/adapter-node';
 import { fileURLToPath } from 'node:url';
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 
 /**
  * DEPLOY_TARGET picks the adapter and the platform module (`#target`) at build time.
@@ -18,11 +20,44 @@ if (process.platform === 'win32' && /^[a-z]:/.test(process.cwd())) {
 	process.chdir(process.cwd()[0].toUpperCase() + process.cwd().slice(1));
 }
 
+/**
+ * Bundles the SQL migrations (drizzle/ and drizzle-platform/) into the app as `virtual:migrations`,
+ * so client databases can be created and upgraded at runtime on both targets (Workers have no
+ * file system).
+ */
+function bundledMigrations() {
+	const id = 'virtual:migrations';
+	const resolved = '\0' + id;
+	const dirs = { tenant: 'drizzle', platform: 'drizzle-platform' };
+	return {
+		name: 'bundled-migrations',
+		resolveId: (source: string) => (source === id ? resolved : undefined),
+		load(this: { addWatchFile(file: string): void }, loaded: string) {
+			if (loaded !== resolved) return;
+			const out: Record<string, Record<string, string>> = {};
+			for (const [key, dir] of Object.entries(dirs)) {
+				const full = path.resolve(dir);
+				out[key] = {};
+				for (const f of readdirSync(full)
+					.filter((f) => f.endsWith('.sql'))
+					.sort()) {
+					this.addWatchFile(path.join(full, f));
+					out[key][f] = readFileSync(path.join(full, f), 'utf8');
+				}
+			}
+			return `export const tenant = ${JSON.stringify(out.tenant)};\nexport const platform = ${JSON.stringify(out.platform)};`;
+		}
+	};
+}
+
 const target = process.env.DEPLOY_TARGET === 'cloudflare' ? 'cloudflare' : 'node';
-const targetModule = fileURLToPath(new URL(`./src/lib/server/target/${target}.ts`, import.meta.url));
+const targetModule = fileURLToPath(
+	new URL(`./src/lib/server/target/${target}.ts`, import.meta.url)
+);
 
 export default defineConfig({
 	plugins: [
+		bundledMigrations(),
 		tailwindcss(),
 		sveltekit({
 			compilerOptions: {

@@ -1,0 +1,36 @@
+{
+	"key": "dental/template-1",
+	"category": { "key": "dental", "name": "Dental Clinic" },
+	"name": "Dental — Template 1",
+	"description": "The original Orchid Dental Care design: hero slideshow, treatments, dentists, branches with maps, online appointment requests.",
+	"version": 1,
+	"sampleProfile": "dental",
+	"pages": [
+		{ "key": "home", "title": "Home", "path": "/" },
+		{ "key": "about", "title": "About", "path": "/about" },
+		{ "key": "services", "title": "Treatments", "path": "/services" },
+		{ "key": "doctors", "title": "Dentists", "path": "/doctors" },
+		{ "key": "locations", "title": "Branches", "path": "/locations" },
+		{ "key": "certifications", "title": "Certifications", "path": "/certifications" },
+		{ "key": "gallery", "title": "Gallery", "path": "/gallery" },
+		{ "key": "blog", "title": "Blog", "path": "/blog" },
+		{ "key": "contact", "title": "Contact", "path": "/contact" },
+		{ "key": "book", "title": "Book Appointment", "path": "/book" }
+	],
+	"homeSections": [
+		"hero",
+		"intents",
+		"services",
+		"process",
+		"doctors",
+		"locations",
+		"certifications",
+		"technology",
+		"amenities",
+		"testimonials",
+		"insurance",
+		"membership",
+		"faq",
+		"cta"
+	]
+}

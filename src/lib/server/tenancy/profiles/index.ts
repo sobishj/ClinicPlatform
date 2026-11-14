@@ -1,5 +1,5 @@
-import type { ClinicType } from '../../src/lib/settings/schema.js';
-import type { WeeklyHours } from '../../src/lib/types.js';
+import type { ClinicType } from '../../../settings/schema.js';
+import type { WeeklyHours } from '../../../types.js';
 import type { Profile, SeedService } from './types.js';
 import { dentalProfile } from './dental.js';
 

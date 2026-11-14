@@ -1,5 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { users } from '#lib/server/db/schema.js';
 import { verifyPassword } from '#lib/server/crypto.js';
@@ -19,8 +19,7 @@ function safeNext(next: string | null): string {
 
 export const load: PageServerLoad = async ({ locals, url }) => {
 	if (locals.user) redirect(303, safeNext(url.searchParams.get('next')));
-	const count = await locals.db.get<{ n: number }>(sql`SELECT COUNT(*) AS n FROM users`);
-	if (!count?.n) redirect(303, '/admin/setup');
+	// Client logins are created from the console; there is no self-service setup screen.
 	return { title: 'Log in' };
 };
 
@@ -38,19 +37,35 @@ export const actions: Actions = {
 			rateLimit(locals.db, `login:email:${parsed.data.email}`, 8, 15 * 60)
 		]);
 		if (!byIp.allowed || !byEmail.allowed) {
-			return fail(429, { email, message: 'Too many attempts. Please wait 15 minutes and try again.' });
+			return fail(429, {
+				email,
+				message: 'Too many attempts. Please wait 15 minutes and try again.'
+			});
 		}
 
-		const user = await locals.db.select().from(users).where(eq(users.email, parsed.data.email)).get();
+		const user = await locals.db
+			.select()
+			.from(users)
+			.where(eq(users.email, parsed.data.email))
+			.get();
 		// Always run a hash comparison to keep timing similar for unknown emails.
 		const ok = user
 			? await verifyPassword(parsed.data.password, user.passwordHash)
-			: await verifyPassword(parsed.data.password, 'pbkdf2-sha256$100000$AAAAAAAAAAAAAAAAAAAAAA$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+			: await verifyPassword(
+					parsed.data.password,
+					'pbkdf2-sha256$100000$AAAAAAAAAAAAAAAAAAAAAA$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+				);
 		if (!user || !ok || !user.active) {
 			return fail(400, { email, message: 'Email or password is incorrect.' });
 		}
 		await createSession(locals.db, cookies, user.id, request.headers.get('user-agent'));
-		locals.user = { id: user.id, email: user.email, name: user.name, role: user.role, locationIds: [] };
+		locals.user = {
+			id: user.id,
+			email: user.email,
+			name: user.name,
+			role: user.role,
+			locationIds: []
+		};
 		await audit(event, 'login', 'user', user.id, user.email);
 		redirect(303, safeNext(url.searchParams.get('next')));
 	}

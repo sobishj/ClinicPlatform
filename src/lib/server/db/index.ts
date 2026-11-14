@@ -15,7 +15,10 @@ export { schema };
  * D1 has no interactive transactions, so we use `batch()` there; on better-sqlite3
  * we wrap the statements in BEGIN/COMMIT on the single connection.
  */
-export async function runBatch(db: DB, statements: Array<{ execute?: unknown } & PromiseLike<unknown>>) {
+export async function runBatch(
+	db: DB,
+	statements: Array<{ execute?: unknown } & PromiseLike<unknown>>
+) {
 	if (statements.length === 0) return;
 	const anyDb = db as unknown as { batch?: (q: unknown[]) => Promise<unknown>; $client?: unknown };
 	if (isD1(db) && typeof anyDb.batch === 'function') {
@@ -32,9 +35,10 @@ export async function runBatch(db: DB, statements: Array<{ execute?: unknown } &
 	}
 }
 
-function isD1(db: DB): boolean {
-	const client = (db as unknown as { $client?: { prepare?: unknown; exec?: unknown; pragma?: unknown } })
-		.$client;
+export function isD1(db: DB): boolean {
+	const client = (
+		db as unknown as { $client?: { prepare?: unknown; exec?: unknown; pragma?: unknown } }
+	).$client;
 	// better-sqlite3 clients have `pragma`; D1 bindings do not.
 	return !!client && typeof client.pragma !== 'function';
 }

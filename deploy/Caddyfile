@@ -1,5 +1,17 @@
-# Caddy obtains and renews HTTPS certificates automatically for {$DOMAIN}.
-{$DOMAIN} {
+# Caddy serves every client domain with automatic HTTPS ("on-demand TLS"): a certificate is
+# requested the first time a domain is visited, but only if the app confirms the domain belongs
+# to a client (or is the console host). Point a client's domain (A/AAAA or CNAME) at this server
+# and add it in the console — nothing to change here.
+{
+	on_demand_tls {
+		ask http://app:3000/_internal/domain-check
+	}
+}
+
+https:// {
+	tls {
+		on_demand
+	}
 	encode zstd gzip
 
 	# Long-lived caching for hashed build assets and uploaded media.
@@ -10,10 +22,6 @@
 		max_size 10MB
 	}
 
+	# Caddy passes the original Host and X-Forwarded-Proto/For headers to the app.
 	reverse_proxy app:3000
-}
-
-# Redirect www → apex (remove if you prefer the opposite).
-www.{$DOMAIN} {
-	redir https://{$DOMAIN}{uri} permanent
 }
